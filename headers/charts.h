@@ -1,37 +1,36 @@
 #ifndef CHARTS_H
 #define CHARTS_H
 
-#include <string.h>
+#include <string>
+#include <vector>
 
 class Chart{
 
 private:
-    char chart[12][12];
-
-    bool valid();
+    std::vector<std::vector<char>> chart;
 
 public:
-    Chart::Chart();
-    Chart::Chart(const Chart & refObject);
+    Chart(int mapSize = 12);
+    Chart(const Chart & refObject, int mapSize = 12);
 
     std::string show();
     void clear();
+    bool valid();
 };
 
 class AttackC : public Chart{
 
 private:
-    char miss = "O",
-         hit = "x",
-         scan = "Y";
+    const char miss = 'O', hit = 'x', scan = 'Y';
     int ships; 
 
 public:
-    AttackC::AttackC(int ships): Chart();
-    AttackC::AttackC(const Chart & refObject, int ships) : Chart(refObject);
-
-    std::string show(): show();
-    void clear(): clear();
+    AttackC(int ships = 6): Chart(){
+        this->ships = ships;
+    };
+    AttackC(const Chart & refObject, int ships = 6) : Chart(refObject){
+        this->ships = ships;
+    };
 
     int shipsCounter();
 };
@@ -39,19 +38,16 @@ public:
 class DefenseC : public Chart{
     
 private:
-    char bShip = "C",
-         sShip = "S",
-         sub = "E";
+    const char bShip = 'C', sShip = 'S', sub = 'E';
     int ships;
 
-    bool valid(): valid();
-
 public:
-    DefenseC::DefenseC(int ships): Chart();
-    DefenseC::DefenseC(const Chart & refObject, int ships) : Chart(refObject);
-
-    std::string show(): show();
-    void clear(): clear();
+    DefenseC(int ships = 6): Chart(){
+        this->ships = ships;
+    };
+    DefenseC(const Chart & refObject, int ships = 6) : Chart(refObject){
+        this->ships = ships;
+    };
 
     int shipsCounter();
 };
