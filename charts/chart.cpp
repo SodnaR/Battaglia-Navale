@@ -1,6 +1,6 @@
 #include "../headers/charts.h"
 
-
+//Costruttore classe Chart
 Chart::Chart(int mapSize){
     this->mapSize = mapSize;
     for (int i = 0; i < mapSize; i++)
@@ -14,13 +14,26 @@ Chart::Chart(int mapSize){
     }
 }
 
+/*letterToCoordinate
+*
+*
+*/
 int Chart::letterToCoordinate(std::string coordinate){
     char start = 'a';
     return coordinate[0] - start;
 }
 
+bool Chart::valid(int col, int row){
+    if(col < 1 || col > mapSize) return false;
+    if(row < 1 || row > mapSize) return false;
+    return true;
+}
+
 bool Chart::valid(std::string coordinate){
-    return false;
+    char end = 'a' + mapSize;
+    if(coordinate.substr(0, 1) == "" + end) return false;
+    if(stoi(coordinate.substr(1)) < 1 || stoi(coordinate.substr(1)) > mapSize) return false;
+    return true;
 }
 
 std::string Chart::show(){
@@ -59,15 +72,18 @@ char Chart::setTile(int row, int col, char sub){
 
 char Chart::setTile(std::string tile, char sub){
     try{
+        //if(!valid(tile)) throw(tile);
         if(tile.length()==3){
-            return setTile(letterToCoordinate(tile.substr(0, 1)), std::stoi(tile.substr(1, 2)), sub);
+            return setTile(letterToCoordinate(tile.substr(0, 1)), (std::stoi(tile.substr(1, 2)) - 1), sub);
         } else if (tile.length()==2){
-            return setTile(letterToCoordinate(tile.substr(0, 1)), std::stoi(tile.substr(1, 1)), sub);
+            return setTile(letterToCoordinate(tile.substr(0, 1)), (std::stoi(tile.substr(1, 1)) - 1), sub);
         } else {
              throw(tile.length());
         }
     } catch(int invalid){
         return 0;
+    } catch(std::string coordinate){
+        return 1;
     }
 }
 

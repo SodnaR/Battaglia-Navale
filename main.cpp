@@ -6,7 +6,7 @@ using namespace std;
 
 int main(){
     AttackC attack1, attack2;
-    attack1.setTile("b10", 'A');
+    attack1.setTile(2, 10, 'A');
     cout<<attack1;
     return 0;
 }
