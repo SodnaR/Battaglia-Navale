@@ -15,7 +15,7 @@ public:
     Ship(int start);
 
     bool hit();
-}
+};
 
 class Battleship : public Ship{
 
@@ -32,7 +32,7 @@ public:
     };
 
     void fire();
-}
+};
 
 class Support : public Ship{
 
@@ -48,7 +48,7 @@ public:
     };
 
     void move_heal();
-}
+};
 
 class Submarine : public Ship{
 
@@ -64,6 +64,6 @@ public:
     }
 
     void move_scan();
-}
+};
 
 #endif

@@ -1,5 +1,1 @@
-#include "headers/charts.h"
-
-bool DefenseC::valid(){
-
-}
+#include "../headers/charts.h"
