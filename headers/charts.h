@@ -7,16 +7,32 @@
 class Chart{
 
 private:
+    int mapSize;
     std::vector<std::vector<char>> chart;
+
+    int letterToCoordinate(std::string coordinate);
 
 public:
     Chart(int mapSize = 12);
     Chart(const Chart & refObject, int mapSize = 12);
 
+    bool valid(std::string coordinate);
     std::string show();
     void clear();
-    bool valid();
+
+    //Getter
+    std::vector<std::vector<char>> getChart();
+    char getTile(int col, int row);
+    int getMapSize();
+
+    //Setter
+    char setTile(int col, int row, char sub);
+    char setTile(std::string tile, char sub);
 };
+
+std::ostream &operator<<(std::ostream &os, Chart &chart);
+bool operator==(Chart map1, Chart map2);
+bool operator!=(Chart map1, Chart map2);
 
 class AttackC : public Chart{
 
