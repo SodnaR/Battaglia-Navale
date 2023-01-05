@@ -16,6 +16,7 @@ public:
     Chart(int mapSize = 12);
     Chart(const Chart & refObject, int mapSize = 12);
 
+    bool valid(int col, int row);
     bool valid(std::string coordinate);
     std::string show();
     void clear();
@@ -23,6 +24,7 @@ public:
     //Getter
     std::vector<std::vector<char>> getChart();
     char getTile(int col, int row);
+    char getTile(std::string coordinate);
     int getMapSize();
 
     //Setter
@@ -34,23 +36,6 @@ std::ostream &operator<<(std::ostream &os, Chart &chart);
 bool operator==(Chart map1, Chart map2);
 bool operator!=(Chart map1, Chart map2);
 
-class AttackC : public Chart{
-
-private:
-    const char miss = 'O', hit = 'x', scan = 'Y';
-    int ships; 
-
-public:
-    AttackC(int ships = 6): Chart(){
-        this->ships = ships;
-    };
-    AttackC(const Chart & refObject, int ships = 6) : Chart(refObject){
-        this->ships = ships;
-    };
-
-    int shipsCounter();
-};
-
 class DefenseC : public Chart{
     
 private:
@@ -58,7 +43,7 @@ private:
     int ships;
 
 public:
-    DefenseC(int ships = 6): Chart(){
+    DefenseC(int mapSize, int ships = 6): Chart(mapSize){
         this->ships = ships;
     };
     DefenseC(const Chart & refObject, int ships = 6) : Chart(refObject){
@@ -66,6 +51,24 @@ public:
     };
 
     int shipsCounter();
+};
+
+class AttackC : public Chart{
+
+private:
+    const char miss = 'O', hit = 'x', scan = 'Y';
+    int ships; 
+
+public:
+    AttackC(int mapSize, int ships = 6): Chart(mapSize){
+        this->ships = ships;
+    };
+    AttackC(const Chart & refObject, int ships = 6) : Chart(refObject){
+        this->ships = ships;
+    };
+
+    int shipsCounter();
+    attack(DefenseC enemyChart);
 };
 
 #endif

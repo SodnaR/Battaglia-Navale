@@ -1,6 +1,6 @@
 #include "../headers/charts.h"
 
-//Costruttore classe Chart
+
 Chart::Chart(int mapSize){
     this->mapSize = mapSize;
     for (int i = 0; i < mapSize; i++)
@@ -15,27 +15,44 @@ Chart::Chart(int mapSize){
 }
 
 /*letterToCoordinate
+*   Trasfoma le coordinate dalla parte alfa alla numerica
 *
-*
+*   Ritorna la posizione in base alla differenza dei caratteri
 */
 int Chart::letterToCoordinate(std::string coordinate){
     char start = 'a';
     return coordinate[0] - start;
 }
 
+
+/*valid
+*   Controlla se le coordinate son valide
+*   
+*   Controllo basato sulla base delle posizione della griglia
+*/
 bool Chart::valid(int col, int row){
     if(col < 1 || col > mapSize) return false;
     if(row < 1 || row > mapSize) return false;
     return true;
 }
 
+/*valid
+*   Controlla se le coordinate son valide
+*
+*   Controllo della parte alfa del testo
+*   Per poter usare anche la notazione alfanumerica
+*/
 bool Chart::valid(std::string coordinate){
     char end = 'a' + mapSize;
-    if(coordinate.substr(0, 1) == "" + end) return false;
-    if(stoi(coordinate.substr(1)) < 1 || stoi(coordinate.substr(1)) > mapSize) return false;
+    if(coordinate[0] - end > 0 || coordinate[0] < 'a') return false;
     return true;
 }
 
+/*show
+*   Mostra la griglia attuale
+*
+*   Ritorna come stringa
+*/
 std::string Chart::show(){
     std::string output = "\n";
     for (int i = 0; i < mapSize; i++){
@@ -49,34 +66,85 @@ std::string Chart::show(){
     return output;
 }
 
+/*clear
+*   Reimposta la griglia al valore di partenza
+*/
 void Chart::clear(){
-    chart.clear();
+    for (int i = 0; i < mapSize; i++)
+    {
+        std::vector<char> line;
+        for (int j = 0; j < mapSize; j++)
+        {
+            chart[i][j] = ' ';
+        }
+    }
 }
 
+/*getChart
+*   Ritorna la griglia
+*
+*   Ritorna come vettore di vettori di char 
+*/
 std::vector<std::vector<char>> Chart::getChart(){
     return this->chart;
 }
 
+/*getTile
+*   Ritorna il valore della casella scelta
+*
+*   Ritorna il valore in base alla casella in base numerica
+*/
 char Chart::getTile(int col, int row){
     return this->chart[col][row];
 }
 
+/*
+*
+*
+*/
+char Chart::getTile(std::string coordinate){
+    int x, y;
+    try{
+        if(!valid(coordinate)) throw(coordinate);
+    } catch(int invalid){
+        return 0;
+    } catch(std::string coordinate){
+        return 1;
+    }
+    return chart[y][x];
+}
+
+/*getMapSize
+*   Ritorna il valore della grandezza della griglia
+*/
 int Chart::getMapSize(){
     return this->mapSize;
 }
 
+/*setTile
+*   Imposta la casella con il valore con il valore desiderato
+*
+*   Usa le coordinate numeriche per individuare la locazione
+*/
 char Chart::setTile(int row, int col, char sub){
-    this->chart[row][col] = sub;
+    if(valid(col, row)) this->chart[row][col] = sub;
     return sub;
 }
 
+/*setTile
+*   Imposta la casella con il valore con il valore desiderato
+*
+*   Metodo con il quale si usa un linguaggio alfanumerico
+*   presenti molti controlli sulle lettere
+*   fa affidamento sul metodo: setTile con variabili numeriche
+*/
 char Chart::setTile(std::string tile, char sub){
     try{
-        //if(!valid(tile)) throw(tile);
+        if(!valid(tile)) throw(tile);
         if(tile.length()==3){
-            return setTile(letterToCoordinate(tile.substr(0, 1)), (std::stoi(tile.substr(1, 2)) - 1), sub);
+            return setTile(letterToCoordinate(tile), (std::stoi(tile.substr(1, 2)) - 1), sub);
         } else if (tile.length()==2){
-            return setTile(letterToCoordinate(tile.substr(0, 1)), (std::stoi(tile.substr(1, 1)) - 1), sub);
+            return setTile(letterToCoordinate(tile), (std::stoi(tile.substr(1, 1)) - 1), sub);
         } else {
              throw(tile.length());
         }
@@ -88,8 +156,31 @@ char Chart::setTile(std::string tile, char sub){
 }
 
 std::ostream& operator<<(std::ostream& os, Chart& map){
-    std::string out = map.getMapSize() + "\n";
-    out += map.show();
+    char slot = 'A';
+
+    std::string out = "Map Size: "+ std::to_string(map.getMapSize()) +"\n";
+    std::vector<std::vector<char>> ref = map.getChart();
+    for (int i = 0, s = 0; i < map.getMapSize(); i++, s++){
+        if(s==9) s+=2;
+        if(s==21) s+=3;
+        out += slot + s;
+        for(int j = 0; j < map.getMapSize(); j++){
+            out += "[";
+            out += ref[i][j];  
+            out += "]";
+        }
+        out += "\n";
+    } 
+    for(int i = 1; i <= map.getMapSize(); i++){
+        if(i <= 10){
+            out += "  ";
+        } else {
+            out += " ";
+        }
+
+        out += std::to_string(i);
+    }
+    out += "\n";
     os << out;
     return os;
 }
@@ -104,4 +195,8 @@ bool operator==(Chart map1, Chart map2){
         } 
     }
     return true;
+}
+
+bool operator!=(Chart map1, Chart map2){
+    return !operator==;
 }

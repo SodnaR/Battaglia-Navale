@@ -9,10 +9,12 @@ private:
     int plate, 
         dim;
         
+    virtual std::string locateCenter()=0;
     void sink();
 
 public:
     Ship(int start);
+
 
     bool hit();
 };
