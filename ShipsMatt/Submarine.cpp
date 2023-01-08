@@ -1,5 +1,12 @@
 #include "Submarine.h"
 
+Submarine::Submarine(int x, int y){
+	dim=1;
+	armor=1;
+	center[0]=x;
+	center[1]=y;
+	orien=0;
+}
 /*
 	Griglia d= griglia di difesa del giocatore che vuole muovere il sottomarino
 */
