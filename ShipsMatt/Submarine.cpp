@@ -14,8 +14,8 @@ void Submarine::move(int x, int y, Griglia d){
 }
 
 /*
-	Grglia d= griglia di difesa del giocatore che sta venendo scansionato
-	Grglia a= girglia di attacco del giocatore che sta scansionando
+	Griglia d= griglia di difesa del giocatore che sta venendo scansionato
+	Griglia a= griglia di attacco del giocatore che sta scansionando
 */
 
 void Submarine::scan(Griglia d, Griglia a){
