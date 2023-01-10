@@ -10,3 +10,10 @@ void Ship::locateCenter(std::vector<int> bow, std::vector<int> stern){
 		rotation=1;
 	}
 }
+void Ship::setArmor(int a){
+	if(a>dim){
+		throw Invalid(); //se l'armatura viene modificata e supera la dimensione (armatura iniziale) lancia eccezione
+	}else{
+		armor=a;
+	}
+}
