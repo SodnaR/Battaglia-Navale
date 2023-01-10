@@ -14,6 +14,11 @@ Chart::Chart(int mapSize){
     }
 }
 
+Chart::Chart(const Chart& refObject){
+    this->mapSize = refObject.mapSize;
+    this->chart = refObject.chart;
+}
+
 /*letterToCoordinate
 *   Trasfoma le coordinate dalla parte alfa alla numerica
 *
@@ -31,8 +36,8 @@ int Chart::letterToCoordinate(std::string coordinate){
 *   Controllo basato sulla base delle posizione della griglia
 */
 bool Chart::valid(int col, int row){
-    if(col < 1 || col > mapSize) return false;
-    if(row < 1 || row > mapSize) return false;
+    if(col < 0 || col > mapSize) return false;
+    if(row < 0 || row > mapSize) return false;
     return true;
 }
 
@@ -42,9 +47,24 @@ bool Chart::valid(int col, int row){
 *   Controllo della parte alfa del testo
 *   Per poter usare anche la notazione alfanumerica
 */
-bool Chart::valid(std::string coordinate){
+bool Chart::valid(std::string tile){
     char end = 'a' + mapSize;
-    if(coordinate[0] - end > 0 || coordinate[0] < 'a') return false;
+    if(tile[0] - end > 0 || tile[0] < 'a') return false;
+
+    if(tile.length() <= 3){
+        if(tile.length() == 3){
+            int test = std::stoi(tile.substr(1, 2)) - 1;
+            return valid(test, test);
+        }
+        if(tile.length() == 2){
+            int test = std::stoi(tile.substr(1, 1)) - 1;
+            return valid(test, test);
+        }
+    }
+    else{ 
+        return false;
+    }
+
     return true;
 }
 
@@ -98,20 +118,29 @@ char Chart::getTile(int col, int row){
     return this->chart[col][row];
 }
 
-/*
-*
-*
+/*getTile
+*   Ritorna il valore della casella scelta
+*   
+*   Ritorna il valore in base alla coordinata in base alfanumerica
 */
 char Chart::getTile(std::string coordinate){
     int x, y;
     try{
         if(!valid(coordinate)) throw(coordinate);
+        if(coordinate.length()==3){
+            y = std::stoi(coordinate.substr(1, 2)) - 1;
+        } else if (coordinate.length()==2){
+            y = std::stoi(coordinate.substr(1, 1)) - 1;
+        } else {
+             throw(coordinate.length());
+        }
+        x = letterToCoordinate(coordinate);
     } catch(int invalid){
         return 0;
     } catch(std::string coordinate){
         return 1;
     }
-    return chart[y][x];
+    return getTile(x, y);
 }
 
 /*getMapSize

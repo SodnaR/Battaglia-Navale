@@ -13,8 +13,11 @@ private:
     int letterToCoordinate(std::string coordinate);
 
 public:
+    //constructor
     Chart(int mapSize = 12);
-    Chart(const Chart & refObject, int mapSize = 12);
+
+    //copy constructor
+    Chart(const Chart& refObject);
 
     bool valid(int col, int row);
     bool valid(std::string coordinate);
@@ -36,39 +39,49 @@ std::ostream &operator<<(std::ostream &os, Chart &chart);
 bool operator==(Chart map1, Chart map2);
 bool operator!=(Chart map1, Chart map2);
 
-class DefenseC : public Chart{
+class DefenceC : public Chart{
     
 private:
-    const char bShip = 'C', sShip = 'S', sub = 'E';
+    static const char bShip = 'C', sShip = 'S', sub = 'E';
     int ships;
 
 public:
-    DefenseC(int mapSize, int ships = 6): Chart(mapSize){
+    //constructor
+    DefenceC(int mapSize = 12, int ships = 6): Chart(mapSize){
         this->ships = ships;
     };
-    DefenseC(const Chart & refObject, int ships = 6) : Chart(refObject){
+
+    //copy constructor
+    DefenceC(const Chart& refObject, int ships = 6) : Chart(refObject){
         this->ships = ships;
     };
 
     int shipsCounter();
 };
+
+std::ostream &operator<<(std::ostream &os, DefenceC &chart);
 
 class AttackC : public Chart{
 
 private:
-    const char miss = 'O', hit = 'x', scan = 'Y';
+    static const char miss = 'O', hit = 'x', scan = 'Y';
     int ships; 
 
 public:
-    AttackC(int mapSize, int ships = 6): Chart(mapSize){
+    //constructor
+    AttackC(int mapSize = 12, int ships = 6): Chart(mapSize){
         this->ships = ships;
     };
-    AttackC(const Chart & refObject, int ships = 6) : Chart(refObject){
+
+    //copy constructor
+    AttackC(const Chart& refObject, int ships = 6) : Chart(refObject){
         this->ships = ships;
     };
 
     int shipsCounter();
-    attack(DefenseC enemyChart);
+    attack(DefenceC enemyChart);
 };
+
+std::ostream &operator<<(std::ostream &os, AttackC &chart);
 
 #endif
