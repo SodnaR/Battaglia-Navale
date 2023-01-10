@@ -1,27 +1,22 @@
 #include <iostream>
 #include <vector>
+#include <map>
+#include <memory>
 using namespace std;
 
-#include "headers/charts.h"
+/*Compilatore
+*   g++ -o test main.cpp charts/chart.cpp charts/attack_chart.cpp charts/defense_chart.cpp player/player.cpp ships/ship.cpp ships/battleship.cpp ships/support.cpp ships/submarine.cpp
+*
+*/
+
+#include "headers/player.h"
 
 int main(){
-    AttackC attack1(21);
+    DefenceC defence;
+    DefenceC d2 = defence;
 
-    attack1.setTile(2, 10, 'A');
-    attack1.setTile(3, 11, 'A');
-    attack1.setTile(1, 1, 'A');
-    attack1.setTile(6, 10, 'A');
-    attack1.setTile("h4", 'A');
-    attack1.setTile(2, 1, 'A');
-    attack1.setTile(4, 4, 'A');
-    attack1.setTile(3, 7, 'A');
-    attack1.setTile(7, 5, 'A');
-    cout<<attack1;
-    attack1.clear();
-    cout<<attack1;
+    Player p2(defence);
 
-
-    cout<<attack1.show();
-
+    p2.addShip((string)"b1", (string)"b5", Ship(5, 0));
     return 0;
 }
