@@ -1,6 +1,7 @@
 #ifndef CHARTS_H
 #define CHARTS_H
 
+#include <cctype>
 #include <string>
 #include <vector>
 

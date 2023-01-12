@@ -13,24 +13,26 @@ class Player{
 private:
     AttackC a_grid;
     DefenceC d_grid;
-
-    std::map<std::string, Ship*> ships;
+    std::map<std::string, Ship> ships;
+    
+    bool validPosition(std::string tile);
+    char addToChart(std::string tile, char id);
+    
 public:
     //constructor
-    Player(Chart map);
+    Player();
     Player(DefenceC d_grid);
 
     //copy constructor
     Player(const Player& refObject);
 
-    Ship* addShip(std::string stern, std::string bow, Ship* ship);
-    Ship* addShip(int stern[], int bow[], Ship* ship);
+    Ship addShip(std::string stern, std::string bow, Ship& ship);
+    Ship addShip(int stern[], int bow[], Ship& ship);
 
     //getter
-    std::map<std::string, Ship*> ShipLegend();
+    std::map<std::string, Ship> shipLegend();
     AttackC getAttackGrid();
     DefenceC getDefenseGrid();
-
 
 };
 
