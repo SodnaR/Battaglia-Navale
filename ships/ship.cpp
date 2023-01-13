@@ -16,23 +16,6 @@ Ship::Ship(int dim, int stern[], int bow[], char id){
     this->id = id;
 }
 
-Ship::Ship(int dim, std::string center, char id){
-    this->dim = dim;
-    this->plate = dim;
-    this->orient = 0;
-    this->id = id;
-    this->center = center;
-    
-}
-
-Ship::Ship(Ship* ship){
-    this->dim = ship->dim;
-    this->plate = ship->plate;
-    this->orient = ship->orient;
-    this->id = ship->id;
-    this->center = ship->center;
-}
-
 int Ship::findOrientation(std::string stern, std::string bow){
     if(stern[0] == bow[0]) return 1;
     return 0;
@@ -42,8 +25,6 @@ int Ship::findOrientation(int stern[], int bow[]){
     if(stern[0] == bow[0]) return 1;
     return 0;
 }
-
-#include <iostream>
 
 std::string Ship::locateCenter(std::string stern, std::string bow){
     if(stern.length() > 3 || bow.length() > 3) return "invalid";
@@ -83,6 +64,10 @@ int Ship::hit(){
     return --plate; 
 }
 
+int Ship::heal(){
+    return plate = dim;
+}
+
 
 int Ship::getDimension(){
     return dim;
@@ -102,6 +87,10 @@ std::string Ship::getCenter(){
 
 char Ship::getId(){
     return id;
+}
+
+std::string Ship::moved(std::string center){
+    return this->center = center;
 }
 
 

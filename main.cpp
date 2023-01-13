@@ -27,21 +27,14 @@ void showmap(Player player){
 int main(){
     
     Player p1, p2;
-    string t1 = "e1", t2 = "e5";
+    string t1 = "e1", t2 = "e5", t3 = "l7", t4 = "n7";
     Battleship shipTest = Battleship(t1, t2);
-    Support supportTest = Support("h5", "l5");
-    string center = shipTest.getCenter();
+    Support supportTest = Support(t3, t4);
     
     p2.addShip(t1, t2, shipTest);
-    p2.addShip("h5", "l5", supportTest);
+    p2.addShip(t3, t4, supportTest);
     
-
-    cout<<p2<<endl<<endl;
-
-    if(p2.move_heal(p2.getShip("h5"), "f4"));
-
-    cout<<p2<<endl<<endl;
-
+    cout<<p2<<endl<<endl<<"------------------------------------------------------------\n\n";
 
     return 0;
 }

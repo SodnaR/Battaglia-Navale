@@ -20,7 +20,7 @@ private:
     char addToChart(std::string tile, char id);
     
     bool move(std::string stern, std::string bow, Ship* ship);
-    bool heal();
+    bool heal(Ship* ship);
     
 public:
     //constructor

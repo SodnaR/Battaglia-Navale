@@ -1,6 +1,5 @@
 #include "../headers/charts.h"
 
-
 Chart::Chart(int mapSize){
     this->mapSize = mapSize;
     for (int i = 0; i < mapSize; i++)
@@ -25,8 +24,9 @@ Chart::Chart(const Chart& refObject){
 *   Ritorna la posizione in base alla differenza dei caratteri
 */
 int Chart::letterToCoordinate(std::string coordinate){
-    char start = 'a';
-    return coordinate[0] - start;
+    if(coordinate[0] > 'y') return coordinate[0] - 'a' - 5;
+    if(coordinate[0] > 'k') return coordinate[0] - 'a' - 2;
+    return coordinate[0] - 'a';
 }
 
 
@@ -48,9 +48,15 @@ bool Chart::valid(int col, int row){
 *   Per poter usare anche la notazione alfanumerica
 */
 bool Chart::valid(std::string tile){
-    char end = 'a' + mapSize;
-    if(tile[0] - end > 0 || tile[0] < 'a') return false;
-
+    char end;
+    if(tile[0] >= 'y' && tile[0] >= 'k'){
+        end =  'a' + mapSize + 5;
+    } else if (tile[0] >= 'k'){
+        end = 'a' + mapSize + 2;
+    } else {
+        end = 'a' + mapSize;
+    }
+    if(tile[0] - end >= 0 || tile[0] < 'a') return false;
     if(tile.length() <= 3){
         if(tile.length() == 3){
             int test = std::stoi(tile.substr(1, 2)) - 1;
@@ -183,13 +189,14 @@ int Chart::getMapSize(){
     return this->mapSize;
 }
 
+
 /*setTile
 *   Imposta la casella con il valore con il valore desiderato
 *
 *   Usa le coordinate numeriche per individuare la locazione
 */
 char Chart::setTile(int row, int col, char sub){
-    if(valid(col, row)) this->chart[row][col] = sub;
+    this->chart[row][col] = sub;
     return sub;
 }
 
@@ -202,7 +209,7 @@ char Chart::setTile(int row, int col, char sub){
 */
 char Chart::setTile(std::string tile, char sub){
     try{
-        if(!valid(tile)) throw(tile);
+        if(!valid(tile)) throw(tile.length());
         if(tile.length()==3){
             return setTile(letterToCoordinate(tile), (std::stoi(tile.substr(1, 2)) - 1), sub);
         } else if (tile.length()==2){
@@ -211,9 +218,9 @@ char Chart::setTile(std::string tile, char sub){
              throw(tile.length());
         }
     } catch(int invalid){
-        return 0;
+        return sub;
     } catch(std::string coordinate){
-        return 1;
+        return sub;
     }
 }
 
