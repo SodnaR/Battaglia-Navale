@@ -13,11 +13,14 @@ class Player{
 private:
     AttackC a_grid;
     DefenceC d_grid;
-    std::map<std::string, Ship> ships;
+    std::map<std::string, Ship*> ships;
     
     bool validPosition(std::string tile, std::string toTile);
-    bool obstacles(std::string stern, std::string bow, Ship ship);
+    bool obstacles(std::string stern, std::string bow, Ship* ship);
     char addToChart(std::string tile, char id);
+    
+    bool move(std::string stern, std::string bow, Ship* ship);
+    bool heal();
     
 public:
     //constructor
@@ -30,13 +33,14 @@ public:
     Ship addShip(std::string stern, std::string bow, Ship& ship);
     Ship addShip(int stern[], int bow[], Ship& ship);
 
-    bool shot(Ship bship, std::string tile, Player opposite);
+    bool shot(Ship* bship, std::string tile, Player opposite);
+    bool move_heal(Ship* sship, std::string tile);
 
     //getter
     AttackC getAttackGrid();
     DefenceC getDefenceGrid();
-    std::map<std::string, Ship> shipLegend();
-    Ship getShip(std::string tile);
+    std::map<std::string, Ship*> shipLegend();
+    Ship* getShip(std::string tile);
     std::string getShipCenter(std::string ship_tile);
 };
 

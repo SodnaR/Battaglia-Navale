@@ -51,6 +51,7 @@ bool operator!=(Ship ship1, Ship ship2);
 struct Battleship : public Ship{
 
 private:
+    char cavallo = 'C';
 
 public:
 

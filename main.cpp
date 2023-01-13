@@ -13,33 +13,33 @@ using namespace std;
 #include "headers/player.h"
 
 void showmap(Player player){
-    map<string, Ship>::iterator it = player.shipLegend().begin();
+    map<string, Ship*>::iterator it = player.shipLegend().begin();
 
-    for (std::pair<std::string, Ship> element : player.shipLegend()) {
+    for (std::pair<std::string, Ship*> element : player.shipLegend()) {
         // Accessing KEY from element
         std::string word = element.first;
-        Ship ship = element.second;
-        std::cout << endl << word <<" :: "<< ship.getArmor();
-        ship.hit();
+        Ship* ship = element.second;
+        std::cout << endl << word <<" :: "<< ship->getArmor();
     }
 }
 
 
 int main(){
+    
     Player p1, p2;
     string t1 = "e1", t2 = "e5";
     Battleship shipTest = Battleship(t1, t2);
+    Support supportTest = Support("h5", "l5");
     string center = shipTest.getCenter();
+    
     p2.addShip(t1, t2, shipTest);
+    p2.addShip("h5", "l5", supportTest);
     
 
-    p1.shot(p1.getShip("e3"), "e2", p2);
-    //p1.shot("g9", p2);
-
     cout<<p2<<endl<<endl;
-    cout<<p1<<endl<<endl;
-
-    showmap(p2);
-
+    /*
+    if(p2.move_heal(p2.getShip("h5"), "m11")) cout<<"Corretto";
+    cout<<p2<<endl<<endl;
+    */
     return 0;
 }
