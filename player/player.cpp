@@ -1,6 +1,5 @@
 #include "../headers/Player.h"
 
-
 Player::Player(){
     this->a_grid = AttackC();
     this->d_grid = DefenceC();
@@ -151,6 +150,7 @@ Ship Player::addShip(std::string stern, std::string bow, Ship& ship){
             std::string tile(1, i);
             tile += std::to_string(y);
             ships.insert(std::pair<std::string, Ship*>(tile, shipPointer));
+            d_grid.setTile(tile, ship.getId());
         }
     }
     return ship;
