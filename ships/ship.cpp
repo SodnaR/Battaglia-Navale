@@ -6,10 +6,6 @@ Ship::Ship(int dim, std::string stern, std::string bow, char id){
     this->orient = findOrientation(stern, bow);
     this->center = locateCenter(stern, bow);
     this->id = id;
-    for (int i = 0; i < dim; i++)
-    {
-        shot.push_back(false);
-    }
 }
 
 Ship::Ship(int dim, int stern[], int bow[], char id){
@@ -18,11 +14,6 @@ Ship::Ship(int dim, int stern[], int bow[], char id){
     this->orient = findOrientation(stern, bow);
     this->center = locateCenter(stern, bow);
     this->id = id;
-    for (int i = 0; i < dim; i++)
-    {
-        shot.push_back(false);
-    }
-    
 }
 
 Ship::Ship(int dim, std::string center, char id){
@@ -31,11 +22,15 @@ Ship::Ship(int dim, std::string center, char id){
     this->orient = 0;
     this->id = id;
     this->center = center;
-    for (int i = 0; i < dim; i++)
-    {
-        shot.push_back(false);
-    }
     
+}
+
+Ship::Ship(Ship* ship){
+    this->dim = ship->dim;
+    this->plate = ship->plate;
+    this->orient = ship->orient;
+    this->id = ship->id;
+    this->center = ship->center;
 }
 
 int Ship::findOrientation(std::string stern, std::string bow){

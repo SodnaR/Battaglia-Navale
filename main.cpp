@@ -19,7 +19,7 @@ void showmap(Player player){
         // Accessing KEY from element
         std::string word = element.first;
         Ship* ship = element.second;
-        std::cout << endl << word <<" :: "<< ship->getArmor();
+        std::cout << word <<" :: "<< ship->getArmor()<<endl;
     }
 }
 
@@ -37,9 +37,11 @@ int main(){
     
 
     cout<<p2<<endl<<endl;
-    /*
-    if(p2.move_heal(p2.getShip("h5"), "m11")) cout<<"Corretto";
+
+    if(p2.move_heal(p2.getShip("h5"), "f4"));
+
     cout<<p2<<endl<<endl;
-    */
+
+
     return 0;
 }

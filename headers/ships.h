@@ -10,7 +10,6 @@ private:
     int plate, 
         dim;
     std::string center;
-    std::vector<bool> shot;
 
     void sink();
     bool valid(std::string tile);
@@ -30,15 +29,17 @@ public:
     Ship(int dim, int stern[], int bow[], char id);
     Ship(int dim = 0, std::string center = " ", char id = ' ');
 
+    Ship(Ship* ship);
+
     int hit();
     void heal();
-    char getId();
     
     //getter
     int getDimension();
     int getArmor();
     int getOrientation();
     std::string getCenter();
+    char getId();
     std::vector<bool> getStatus();
     bool getSingleStatus(int part);
 

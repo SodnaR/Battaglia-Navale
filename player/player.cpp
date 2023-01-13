@@ -56,17 +56,51 @@ char Player::addToChart(std::string tile, char id){
     d_grid.setTile(tile, id);
     return id;
 }
-/*
+
 bool Player::move(std::string stern, std::string bow, Ship* ship){
     std::string center = ship->getCenter();
     std::map<std::string, Ship*>::iterator it = ships.begin();
     while (it != ships.end()){
         if(it->second->getCenter() == ship->getCenter()){
-            ships.erase(it->first)
+            ships.erase(it->first);
+            d_grid.setTile(it->first, ' ');
         }
         it++;
     }
-}*/
+
+    int y;
+    if(stern.length()==3){
+        y = std::stoi(stern.substr(1, 2)); 
+    } else {
+        y = std::stoi(stern.substr(1, 1)); 
+    }
+    if(ship->getOrientation()){
+        int y2;
+        if(bow.length()==3){
+            y2 = std::stoi(bow.substr(1, 2));
+        } else {
+            y2 = std::stoi(bow.substr(1, 1));
+        }
+        for (int i = y; i <= y2; i++){
+            std::string tile(1, stern[0]);
+            tile += std::to_string(i); 
+            ships.insert(std::pair<std::string, Ship*>(tile, ship));
+            d_grid.setTile(tile, ship->getId());
+        }    
+    } else {
+        char x1 = stern[0], x2 = bow[0];
+            if(x2 >= 'k') x2 -= 2;
+            if(x2 >='y') x2 -= 5;
+        for (char i = x1; i <= x2; i++){
+            std::string tile(1, i);
+            tile += std::to_string(y);
+            ships.insert(std::pair<std::string, Ship*>(tile, ship));
+            d_grid.setTile(tile, ship->getId());
+        }
+    }
+
+    return true;
+}
 
 Ship Player::addShip(std::string stern, std::string bow, Ship& ship){
     Ship *shipPointer = &ship;
@@ -126,22 +160,35 @@ bool Player::shot(Ship* bship, std::string tile, Player opposite){
     return true;
 }
 
-bool Player::move_heal(Ship* sship, std::string tile){
-    std::string center = sship->getCenter();
-    if(sship->getOrientation()){
-        if(center.length() == 3){
-            int coord = std::stoi(center.substr(1, 2));
-            if(obstacles(center.replace(1, 2, std::to_string(coord - 1)), center.replace(1, 2, std::to_string(coord + 1)), sship)){
-                return false;
-            }
-        } else {
-            int coord = std::stoi(center.substr(1, 1));
-            if(obstacles(center.replace(1, 2, std::to_string(coord - 1)), center.replace(1, 2, std::to_string(coord + 1)), sship)){
-                return false;
-            }
-        }
-    }
+#include <iostream>
 
+bool Player::move_heal(Ship* sship, std::string tile){
+    if(sship->getId() != 'S') return false;
+
+    std::string stern, bow;
+    int coord;
+    if(tile.length() == 3){
+        coord = std::stoi(tile.substr(1, 2));
+    } else {
+        coord = std::stoi(tile.substr(1, 1));
+    }
+    if(sship->getOrientation()){
+    std::cout << "+ " << std::endl;
+        stern = (1, tile[0]);
+        stern += std::to_string(coord - 1);
+        bow = (1, tile[0]);
+        bow += std::to_string(coord + 1);
+    } else {
+        stern = (1, tile[0] - 1);
+        stern += std::to_string(coord);
+        bow = (1, tile[0] + 1);
+        bow += std::to_string(coord);
+    }
+    if(!validPosition(stern, bow)) return false;
+    if(obstacles(stern, bow, sship)) return false;
+
+    move(stern, bow, sship);
+    
     return true;
 }
 
