@@ -30,11 +30,14 @@ public:
     Ship addShip(std::string stern, std::string bow, Ship& ship);
     Ship addShip(int stern[], int bow[], Ship& ship);
 
-    //getter
-    std::map<std::string, Ship> shipLegend();
-    AttackC getAttackGrid();
-    DefenceC getDefenseGrid();
+    bool shot(Ship bship, std::string tile, Player opposite);
 
+    //getter
+    AttackC getAttackGrid();
+    DefenceC getDefenceGrid();
+    std::map<std::string, Ship> shipLegend();
+    Ship getShip(std::string tile);
+    std::string getShipCenter(std::string ship_tile);
 };
 
 std::ostream &operator<<(std::ostream &os, Player &player);

@@ -1,5 +1,9 @@
 #include "../headers/charts.h"
 
+int DefenceC::addShip(){
+    return ++ships;
+}
+
 int DefenceC::shipsCounter(){
     return ships;
 }

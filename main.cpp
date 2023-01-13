@@ -26,15 +26,20 @@ void showmap(Player player){
 
 
 int main(){
-    Player p2;
-    string t1 = "e1", t2 = "e6";
-    Ship shipTest = Battleship(t1, t2);
+    Player p1, p2;
+    string t1 = "e1", t2 = "e5";
+    Battleship shipTest = Battleship(t1, t2);
+    string center = shipTest.getCenter();
     p2.addShip(t1, t2, shipTest);
-    t1 = "c3"; t2 = "c5";
-    Ship supportTest = Support(t1, t2);
-    p2.addShip(t1, t2, supportTest);
+    
 
-    cout<<p2<<endl;
+    p1.shot(p1.getShip("e3"), "e2", p2);
+    //p1.shot("g9", p2);
+
+    cout<<p2<<endl<<endl;
+    cout<<p1<<endl<<endl;
+
+    showmap(p2);
 
     return 0;
 }

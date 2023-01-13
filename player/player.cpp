@@ -10,6 +10,12 @@ Player::Player(DefenceC d_grid){
     this->d_grid = DefenceC(d_grid);
 }
 
+Player::Player(const Player& refObject){
+    this->a_grid = refObject.a_grid;
+    this->d_grid = refObject.d_grid;
+    this->ships = refObject.ships;
+}
+
 bool Player::validPosition(std::string tile, std::string toTile){
     try{
         if(tile.length() < 2 || tile.length() > 3) throw(tile);
@@ -87,7 +93,30 @@ Ship Player::addShip(std::string stern, std::string bow, Ship& ship){
     return ship;
 }
 
-DefenceC Player::getDefenseGrid(){
+#include <iostream>
+
+bool Player::shot(Ship bship, std::string tile, Player opposite){
+    if(opposite.getDefenceGrid().getTile(tile) != ' '){
+        a_grid.setTile(tile, 'x');
+        opposite.getShip(tile).hit();
+        std::cout<<"Armor abbassata a: "<<opposite.getShip(tile).getArmor()<<std::endl;
+        Ship dummy = opposite.getShip(tile);
+        if(dummy.getArmor() == 0){
+            std::map<std::string, Ship>::iterator it = opposite.shipLegend().begin();
+            while (it != opposite.shipLegend().end()){
+                if(it->second == dummy){
+                    a_grid.setTile(it->first, 'X');
+                }
+                it++;
+            }
+        }
+    } else {
+        a_grid.setTile(tile, 'O');
+    }
+    return true;
+}
+
+DefenceC Player::getDefenceGrid(){
     return d_grid;
 }
 
@@ -99,9 +128,17 @@ std::map<std::string, Ship> Player::shipLegend(){
     return ships;
 }
 
+Ship Player::getShip(std::string tile){
+    return ships[tile];
+}
+
+std::string Player::getShipCenter(std::string ship_tile){
+    return ships[ship_tile].getCenter();
+}
+
 std::ostream &operator<<(std::ostream &os, Player &player){
     std::string out = "La tua plancia:";
-    out +=  player.getDefenseGrid().show_coordinate();
+    out +=  player.getDefenceGrid().show_coordinate();
     out += "\nLa plancia nemica:";
     out += player.getAttackGrid().show_coordinate();
     os<<out;

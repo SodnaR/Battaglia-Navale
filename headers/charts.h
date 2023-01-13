@@ -49,15 +49,18 @@ private:
 
 public:
     //constructor
-    DefenceC(int mapSize = 12, int ships = 6): Chart(mapSize){
+    DefenceC(int mapSize = 12, int ships = 0): Chart(mapSize){
         this->ships = ships;
     };
 
     //copy constructor
-    DefenceC(const Chart& refObject, int ships = 6) : Chart(refObject){
+    DefenceC(const Chart& refObject, int ships = 0) : Chart(refObject){
         this->ships = ships;
     };
 
+    int addShip();
+
+    //getter
     int shipsCounter();
 };
 
@@ -71,17 +74,20 @@ private:
 
 public:
     //constructor
-    AttackC(int mapSize = 12, int ships = 6): Chart(mapSize){
+    AttackC(int mapSize = 12, int ships = 0): Chart(mapSize){
         this->ships = ships;
     };
 
     //copy constructor
-    AttackC(const Chart& refObject, int ships = 6) : Chart(refObject){
+    AttackC(const Chart& refObject, int ships = 0) : Chart(refObject){
         this->ships = ships;
     };
 
-    int shipsCounter();
+    int addShip();
     attack(DefenceC enemyChart);
+
+    //getter
+    int shipsCounter();
 };
 
 std::ostream &operator<<(std::ostream &os, AttackC &chart);
