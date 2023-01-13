@@ -15,7 +15,8 @@ private:
     DefenceC d_grid;
     std::map<std::string, Ship> ships;
     
-    bool validPosition(std::string tile);
+    bool validPosition(std::string tile, std::string toTile);
+    bool obstacles(std::string stern, std::string bow, Ship ship);
     char addToChart(std::string tile, char id);
     
 public:

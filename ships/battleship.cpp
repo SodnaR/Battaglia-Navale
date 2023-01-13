@@ -1,10 +1,5 @@
 #include "../headers/ships.h"  
 
-#include <bitset>
-#include <iostream>
-#include <stdexcept>
-#include <string>
-
 std::string Battleship::locateCenter(std::string stern, std::string bow){
     if(stern.length() > 3 || bow.length() > 3) return "invalid";
 
@@ -30,10 +25,6 @@ std::string Battleship::locateCenter(std::string stern, std::string bow){
         out += std::to_string(y);
     }
     return out;
-}
-
-char Battleship::getId(){
-    return id;
 }
 
 std::string Battleship::getCenter(){

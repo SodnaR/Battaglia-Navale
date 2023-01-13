@@ -28,7 +28,7 @@ public:
 
     int hit();
     void heal();
-    virtual char getId();
+    char getId();
     
     //getter
     int getDimension();
@@ -43,7 +43,6 @@ std::ostream &operator<<(std::ostream &os, Ship &ship);
 class Battleship : public Ship{
 
 private:
-    const char id = 'C';
     std::string center;
 
     std::string locateCenter(std::string stern, std::string bow);
@@ -55,25 +54,22 @@ private:
 
 public:
 
-    Battleship(std::string stern, std::string bow) : Ship(5, stern, bow, id){
+    Battleship(std::string stern, std::string bow, char id = 'C') : Ship(5, stern, bow, id){
         center = locateCenter(stern, bow);
     };
-    Battleship(int stern[], int bow[]) : Ship(5, stern, bow, id){
+    Battleship(int stern[], int bow[], char id = 'C') : Ship(5, stern, bow, id){
         center = toTile(locateCenter(stern, bow));
     }
 
     void fire();
 
     //getter
-    char getId();
     std::string getCenter();
-    int getOrientation();
 };
 
 class Support : public Ship{
 
 private:
-    const char id = 'S';
     std::string center;
 
     std::string locateCenter(std::string stern, std::string bow);
@@ -82,22 +78,19 @@ private:
     bool supported();
 
 public:
-    Support(std::string stern, std::string bow) : Ship(3, stern, bow, id){
+    Support(std::string stern, std::string bow, char id = 'S') : Ship(3, stern, bow, id){
         center = locateCenter(stern, bow);
     };
 
     void move_heal();
     
     //getter
-    char getId();
     std::string getCenter();
-    int getOrientation();
 };
 
 class Submarine : public Ship{
 
 private:
-    const char id = 'E';
     std::string center;
     
     std::string locateCenter(std::string stern, std::string bow);
@@ -105,14 +98,13 @@ private:
     bool supported();
 
 public:
-    Submarine(std::string stern, std::string bow) : Ship(1, 0, id){
+    Submarine(std::string stern, std::string bow, char id = 'E') : Ship(1, 0, id){
         center = locateCenter(stern, bow);
     }
     
     void move_scan();
     
     //getter
-    char getId();
 
 };
 

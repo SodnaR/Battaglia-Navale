@@ -86,6 +86,39 @@ std::string Chart::show(){
     return output;
 }
 
+/*show_coordinate
+*   Mostra la griglia attuale
+*   +   Con le coordinate ai lati della griglia
+*
+*   Ritorna come stringa
+*/
+std::string Chart::show_coordinate(){
+    char slot = 'A';
+    std::string out = "\n";
+    for (int i = 0, s = 0; i < mapSize; i++, s++){
+        if(s==9) s+=2;
+        if(s==21) s+=3;
+        out += slot + s;
+        for(int j = 0; j < mapSize; j++){
+            out += "[";
+            out += chart[i][j];  
+            out += "]";
+        }
+        out += "\n";
+    } 
+    for(int i = 1; i <= mapSize; i++){
+        if(i <= 10){
+            out += "  ";
+        } else {
+            out += " ";
+        }
+
+        out += std::to_string(i);
+    }
+    out += "\n";
+    return out;
+}
+
 /*clear
 *   Reimposta la griglia al valore di partenza
 */

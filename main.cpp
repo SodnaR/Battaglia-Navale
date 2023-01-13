@@ -12,26 +12,29 @@ using namespace std;
 
 #include "headers/player.h"
 
-int main(){
-    DefenceC defence;
-    DefenceC d2 = defence;
+void showmap(Player player){
+    map<string, Ship>::iterator it = player.shipLegend().begin();
 
-    Player p2;
-    cout<<d2;
-
-    string t1 = "a1", t2 = "e1";
-    Ship shipTest = Battleship(t1, t2);
-    p2.addShip(t1, t2, shipTest);
-
-    map<string, Ship>::iterator it = p2.shipLegend().begin();
-
-    for (std::pair<std::string, Ship> element : p2.shipLegend()) {
+    for (std::pair<std::string, Ship> element : player.shipLegend()) {
         // Accessing KEY from element
         std::string word = element.first;
         Ship ship = element.second;
         std::cout << endl << word <<" :: "<< ship.getArmor();
         ship.hit();
     }
+}
+
+
+int main(){
+    Player p2;
+    string t1 = "e1", t2 = "e6";
+    Ship shipTest = Battleship(t1, t2);
+    p2.addShip(t1, t2, shipTest);
+    t1 = "c3"; t2 = "c5";
+    Ship supportTest = Support(t1, t2);
+    p2.addShip(t1, t2, supportTest);
+
+    cout<<p2<<endl;
 
     return 0;
 }

@@ -10,14 +10,40 @@ Player::Player(DefenceC d_grid){
     this->d_grid = DefenceC(d_grid);
 }
 
-bool Player::validPosition(std::string tile){
+bool Player::validPosition(std::string tile, std::string toTile){
     try{
         if(tile.length() < 2 || tile.length() > 3) throw(tile);
-        if(!d_grid.valid(tile)) throw(tile);
+        if(toTile.length() < 2 || toTile.length() > 3) throw(tile);
+        if(!d_grid.valid(tile) || !d_grid.valid(toTile)) throw(tile);
+        if(tile[0] != toTile[0] && tile.substr(1) != toTile.substr(1)) throw(tile);
     } catch(std::string invalid){
         return false;
     }
     return true;
+}
+
+bool Player::obstacles(std::string stern, std::string bow, Ship ship){
+    std::string start = stern, end = bow;
+    while(start != end){
+        if(d_grid.getTile(start) != ' '){
+            return true;
+        }
+        if(ship.getOrientation()){
+            int y;
+            if(start.length()==3){
+                y = std::stoi(start.substr(1, 2));
+                y++;
+                start.replace(1, 2, std::to_string(y));
+            } else {
+                y = std::stoi(start.substr(1, 1));
+                y++;
+                start.replace(1, 1, std::to_string(y));
+            }
+        } else {
+            start[0]++;
+        }
+    }
+    return false;
 }
 
 char Player::addToChart(std::string tile, char id){
@@ -25,11 +51,10 @@ char Player::addToChart(std::string tile, char id){
     return id;
 }
 
-#include <iostream>
-
 Ship Player::addShip(std::string stern, std::string bow, Ship& ship){
     int y;
-    if(!validPosition(stern) || !validPosition(bow)) return ship;
+    if(!validPosition(stern, bow)) return ship;
+    if(obstacles(stern, bow, ship)) return ship;
     if(stern.length()==3){
         y = std::stoi(stern.substr(1, 2)); 
     } else {
@@ -46,6 +71,7 @@ Ship Player::addShip(std::string stern, std::string bow, Ship& ship){
             std::string tile(1, stern[0]);
             tile += std::to_string(i);
             ships.insert(std::pair<std::string, Ship>(tile, ship));
+            d_grid.setTile(tile, ship.getId());
         }    
     } else {
         char x1 = stern[0], x2 = bow[0];
@@ -55,6 +81,7 @@ Ship Player::addShip(std::string stern, std::string bow, Ship& ship){
             std::string tile(1, i);
             tile += std::to_string(y);
             ships.insert(std::pair<std::string, Ship>(tile, ship));
+            d_grid.setTile(tile, ship.getId());
         }
     }
     return ship;
@@ -68,7 +95,15 @@ AttackC Player::getAttackGrid(){
     return a_grid;
 }
 
-
 std::map<std::string, Ship> Player::shipLegend(){
     return ships;
+}
+
+std::ostream &operator<<(std::ostream &os, Player &player){
+    std::string out = "La tua plancia:";
+    out +=  player.getDefenseGrid().show_coordinate();
+    out += "\nLa plancia nemica:";
+    out += player.getAttackGrid().show_coordinate();
+    os<<out;
+    return os;
 }

@@ -46,7 +46,7 @@ int Ship::findOrientation(int stern[], int bow[]){
 }
 
 int Ship::hit(){
-    plate -= 1;
+    --plate;
     return plate; 
 }
 
