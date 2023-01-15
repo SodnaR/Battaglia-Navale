@@ -65,7 +65,8 @@ int Ship::hit(){
 }
 
 int Ship::heal(){
-    return plate = dim;
+    if(plate != 0)    return plate = dim;
+    return plate;
 }
 
 

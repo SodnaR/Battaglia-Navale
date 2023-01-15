@@ -1,5 +1,7 @@
 #include "../headers/Player.h"
 
+#include <iostream>
+
 Player::Player(){
     this->a_grid = AttackC();
     this->d_grid = DefenceC();
@@ -30,7 +32,7 @@ bool Player::validPosition(std::string tile, std::string toTile){
 
 bool Player::obstacles(std::string stern, std::string bow, Ship* ship){
     std::string start = stern, end = bow;
-    do{
+    while(start != end){
         if(d_grid.getTile(start) != ' '){
             return true;
         }
@@ -48,7 +50,7 @@ bool Player::obstacles(std::string stern, std::string bow, Ship* ship){
         } else {
             start[0]++;
         }
-    }while(start != end);
+    }
     return false;
 }
 
@@ -102,12 +104,12 @@ bool Player::move(std::string stern, std::string bow, Ship* ship){
 
 bool Player::heal(Ship* ship){
     std::string center = ship->getCenter();
-    int x = center[0] - 'a', y;
     std::string tile;
+    int x = center[0] - 'a', y;
     if(center.length() == 3){
-        y = std::stoi(center.substr(1, 2)) - 1;
+        y = std::stoi(center.substr(1, 2));
     } else{
-        y = std::stoi(center.substr(1, 1)) - 1;
+        y = std::stoi(center.substr(1, 1));
     }
     for (int i = (x > 0) ? (x - 1) : 0; i <= (x + 1); i++){
         for(int j = (y - 1); j <= (y + 1) && j < d_grid.getMapSize(); j++){
@@ -115,6 +117,33 @@ bool Player::heal(Ship* ship){
             tile += std::to_string(j);
             if(ships.find(tile) != ships.end()){
                 getShip(tile)->heal();
+            }
+        }
+    }
+    return true;
+}
+
+bool Player::scan(Ship* ship, Player opposite){
+    std::string center = ship->getCenter();
+    std::string tile;
+    int x = center[0] - 'a', y;
+    if(center.length() == 3){
+        y = std::stoi(center.substr(1, 2));
+    } else{
+        y = std::stoi(center.substr(1, 1));
+    }
+    for (int i = (x > 0) ? (x - 2) : 0; i <= (x + 2); i++){
+        for(int j = (y - 2); j <= (y + 2) && j < d_grid.getMapSize(); j++){
+            tile = (1, ('a' + i));
+            tile += std::to_string(j);
+            if(a_grid.getTile(tile) == ' '){
+                if(opposite.getDefenceGrid().getTile(tile) != ' '){
+                    a_grid.setTile(tile, 'Y');
+                }
+            } else{
+                if(opposite.getDefenceGrid().getTile(tile) == ' '){
+                    a_grid.setTile(tile, ' ');
+                }
             }
         }
     }
@@ -178,9 +207,7 @@ bool Player::shot(Ship* bship, std::string tile, Player opposite){
 }
 
 bool Player::move_heal(Ship* sship, std::string tile){
-    if(ships.find(tile) == ships.end()) return false;
     if(sship->getId() != 'S') return false;
-
     std::string stern, bow;
     int coord;
     if(tile.length() == 3){
@@ -204,6 +231,18 @@ bool Player::move_heal(Ship* sship, std::string tile){
 
     if(!move(stern, bow, sship)) return false;
     if(!heal(sship)) return false;
+
+    return true;
+}
+
+bool Player::move_scan(Ship* eship, std::string tile, Player opposite){
+    if(eship->getId() != 'E') return false;
+
+    if(!validPosition(tile, tile)) return false;
+    if(obstacles(tile, tile, eship)) return false;
+    
+    if(!move(tile, tile, eship)) return false;
+    if(!scan(eship, opposite)) return false;
 
     return true;
 }

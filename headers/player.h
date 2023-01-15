@@ -21,6 +21,7 @@ private:
     
     bool move(std::string stern, std::string bow, Ship* ship);
     bool heal(Ship* ship);
+    bool scan(Ship* ship, Player opposite);
     
 public:
     //constructor
@@ -35,6 +36,7 @@ public:
 
     bool shot(Ship* bship, std::string tile, Player opposite);
     bool move_heal(Ship* sship, std::string tile);
+    bool move_scan(Ship* eship, std::string tile, Player opposite);
 
     //getter
     AttackC getAttackGrid();
