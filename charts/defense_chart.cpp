@@ -1,11 +1,15 @@
 #include "../headers/charts.h"
 
 int DefenceC::addShip(){
-    return ++ships;
+    return ++bships;
+}
+
+int DefenceC::removeShip(){
+    return --bships;
 }
 
 int DefenceC::shipsCounter(){
-    return ships;
+    return bships;
 }
 
 std::ostream &operator<<(std::ostream &os, DefenceC &chart){

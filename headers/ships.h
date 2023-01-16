@@ -10,16 +10,10 @@ private:
     int plate, 
         dim;
     std::string center;
-    std::vector<bool> shot;
-
-    void sink();
-    bool valid(std::string tile);
 
     int findOrientation(std::string stern, std::string bow);
     int findOrientation(int stern[], int bow[]);
 
-    std::string locateCenter(std::string stern, std::string bow);
-    std::string locateCenter(int stern[], int bow[]);
 
 protected:
     int orient;
@@ -28,20 +22,27 @@ protected:
 public:
     Ship(int dim, std::string stern, std::string bow, char id);
     Ship(int dim, int stern[], int bow[], char id);
-    Ship(int dim = 0, std::string center = " ", char id = ' ');
+
+    ~Ship(){};
+    
+    std::string locateCenter(std::string stern, std::string bow);
+    std::string locateCenter(int stern[], int bow[]);
 
     int hit();
-    void heal();
-    char getId();
+    void sink();
+    int heal();
     
     //getter
     int getDimension();
     int getArmor();
     int getOrientation();
     std::string getCenter();
+    char getId();
     std::vector<bool> getStatus();
     bool getSingleStatus(int part);
 
+    //setter
+    std::string moved(std::string center);
 };
 
 std::ostream &operator<<(std::ostream &os, Ship &ship);
@@ -51,6 +52,7 @@ bool operator!=(Ship ship1, Ship ship2);
 struct Battleship : public Ship{
 
 private:
+    char cavallo = 'C';
 
 public:
 
@@ -76,7 +78,7 @@ struct Submarine : public Ship{
 private:
 
 public:
-    Submarine(std::string stern, std::string bow, char id = 'E') : Ship(1, stern, id){
+    Submarine(std::string stern, std::string bow, char id = 'E') : Ship(1, stern, bow, id){
     }
 
 };

@@ -6,10 +6,6 @@ Ship::Ship(int dim, std::string stern, std::string bow, char id){
     this->orient = findOrientation(stern, bow);
     this->center = locateCenter(stern, bow);
     this->id = id;
-    for (int i = 0; i < dim; i++)
-    {
-        shot.push_back(false);
-    }
 }
 
 Ship::Ship(int dim, int stern[], int bow[], char id){
@@ -18,25 +14,8 @@ Ship::Ship(int dim, int stern[], int bow[], char id){
     this->orient = findOrientation(stern, bow);
     this->center = locateCenter(stern, bow);
     this->id = id;
-    for (int i = 0; i < dim; i++)
-    {
-        shot.push_back(false);
-    }
-    
 }
 
-Ship::Ship(int dim, std::string center, char id){
-    this->dim = dim;
-    this->plate = dim;
-    this->orient = 0;
-    this->id = id;
-    this->center = center;
-    for (int i = 0; i < dim; i++)
-    {
-        shot.push_back(false);
-    }
-    
-}
 
 int Ship::findOrientation(std::string stern, std::string bow){
     if(stern[0] == bow[0]) return 1;
@@ -47,8 +26,6 @@ int Ship::findOrientation(int stern[], int bow[]){
     if(stern[0] == bow[0]) return 1;
     return 0;
 }
-
-#include <iostream>
 
 std::string Ship::locateCenter(std::string stern, std::string bow){
     if(stern.length() > 3 || bow.length() > 3) return "invalid";
@@ -88,6 +65,15 @@ int Ship::hit(){
     return --plate; 
 }
 
+void Ship::sink(){
+    delete this;
+}
+
+int Ship::heal(){
+    if(plate != 0)    return plate = dim;
+    return plate;
+}
+
 
 int Ship::getDimension(){
     return dim;
@@ -107,6 +93,10 @@ std::string Ship::getCenter(){
 
 char Ship::getId(){
     return id;
+}
+
+std::string Ship::moved(std::string center){
+    return this->center = center;
 }
 
 

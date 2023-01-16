@@ -20,6 +20,8 @@ public:
     //copy constructor
     Chart(const Chart& refObject);
 
+    ~Chart(){};
+
     bool valid(int col, int row);
     bool valid(std::string coordinate);
     std::string show();
@@ -45,20 +47,21 @@ class DefenceC : public Chart{
     
 private:
     static const char bShip = 'C', sShip = 'S', sub = 'E';
-    int ships;
+    int bships;
 
 public:
     //constructor
-    DefenceC(int mapSize = 12, int ships = 0): Chart(mapSize){
-        this->ships = ships;
+    DefenceC(int mapSize = 12, int bships = 0): Chart(mapSize){
+        this->bships = bships;
     };
 
     //copy constructor
-    DefenceC(const Chart& refObject, int ships = 0) : Chart(refObject){
-        this->ships = ships;
+    DefenceC(const Chart& refObject, int bships = 0) : Chart(refObject){
+        this->bships = bships;
     };
 
     int addShip();
+    int removeShip();
 
     //getter
     int shipsCounter();
@@ -70,24 +73,14 @@ class AttackC : public Chart{
 
 private:
     static const char miss = 'O', hit = 'x', scan = 'Y';
-    int ships; 
 
 public:
     //constructor
-    AttackC(int mapSize = 12, int ships = 0): Chart(mapSize){
-        this->ships = ships;
-    };
+    AttackC(int mapSize = 12): Chart(mapSize){};
 
     //copy constructor
-    AttackC(const Chart& refObject, int ships = 0) : Chart(refObject){
-        this->ships = ships;
-    };
+    AttackC(const Chart& refObject) : Chart(refObject){};
 
-    int addShip();
-    attack(DefenceC enemyChart);
-
-    //getter
-    int shipsCounter();
 };
 
 std::ostream &operator<<(std::ostream &os, AttackC &chart);
