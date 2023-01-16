@@ -2,70 +2,85 @@
 #define SHIPS_H
 
 #include <string>
+#include <vector>
 
 class Ship{
 
 private:
     int plate, 
         dim;
-        
-    virtual std::string locateCenter()=0;
-    void sink();
-
-public:
-    Ship(int start);
-
-
-    bool hit();
-};
-
-class Battleship : public Ship{
-
-private:
     std::string center;
 
-    std::string locateCenter(std::string stern, std::string bow);
-    bool supported();
+    int findOrientation(std::string stern, std::string bow);
+    int findOrientation(int stern[], int bow[]);
+
+
+protected:
+    int orient;
+    char id;
 
 public:
+    Ship(int dim, std::string stern, std::string bow, char id);
+    Ship(int dim, int stern[], int bow[], char id);
 
-    Battleship(std::string stern, std::string bow) : Ship(5){
-        center = locateCenter(stern, bow);
-    };
-
-    void fire();
-};
-
-class Support : public Ship{
-
-private:
-    std::string center;
-
-    std::string locateCenter(std::string stern, std::string bow);
-    bool supported();
-
-public:
-    Support(std::string stern, std::string bow) : Ship(3){
-        center = locateCenter(stern, bow);
-    };
-
-    void move_heal();
-};
-
-class Submarine : public Ship{
-
-private:
-    std::string center;
+    ~Ship(){};
     
     std::string locateCenter(std::string stern, std::string bow);
-    bool supported();
+    std::string locateCenter(int stern[], int bow[]);
+
+    int hit();
+    void sink();
+    int heal();
+    
+    //getter
+    int getDimension();
+    int getArmor();
+    int getOrientation();
+    std::string getCenter();
+    char getId();
+    std::vector<bool> getStatus();
+    bool getSingleStatus(int part);
+
+    //setter
+    std::string moved(std::string center);
+};
+
+std::ostream &operator<<(std::ostream &os, Ship &ship);
+bool operator==(Ship ship1, Ship ship2);
+bool operator!=(Ship ship1, Ship ship2);
+
+struct Battleship : public Ship{
+
+private:
+    char cavallo = 'C';
 
 public:
-    Submarine(std::string stern, std::string bow) : Ship(1){
-        std::string locateCenter(std::string stern, std::string bow);
+
+    Battleship(std::string stern, std::string bow, char id = 'C') : Ship(5, stern, bow, id){
+    }
+    Battleship(int stern[], int bow[], char id = 'C') : Ship(5, stern, bow, id){
     }
 
-    void move_scan();
+};
+
+struct Support : public Ship{
+
+private:
+
+public:
+    Support(std::string stern, std::string bow, char id = 'S') : Ship(3, stern, bow, id){
+    };
+
+};
+
+struct Submarine : public Ship{
+
+private:
+
+public:
+    Submarine(std::string stern, std::string bow, char id = 'E') : Ship(1, stern, bow, id){
+    }
+
 };
 
 #endif

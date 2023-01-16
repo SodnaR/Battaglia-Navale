@@ -1,6 +1,5 @@
 #include "../headers/charts.h"
 
-
 Chart::Chart(int mapSize){
     this->mapSize = mapSize;
     for (int i = 0; i < mapSize; i++)
@@ -14,14 +13,20 @@ Chart::Chart(int mapSize){
     }
 }
 
+Chart::Chart(const Chart& refObject){
+    this->mapSize = refObject.mapSize;
+    this->chart = refObject.chart;
+}
+
 /*letterToCoordinate
 *   Trasfoma le coordinate dalla parte alfa alla numerica
 *
 *   Ritorna la posizione in base alla differenza dei caratteri
 */
 int Chart::letterToCoordinate(std::string coordinate){
-    char start = 'a';
-    return coordinate[0] - start;
+    if(coordinate[0] > 'y') return coordinate[0] - 'a' - 5;
+    if(coordinate[0] > 'k') return coordinate[0] - 'a' - 2;
+    return coordinate[0] - 'a';
 }
 
 
@@ -31,8 +36,8 @@ int Chart::letterToCoordinate(std::string coordinate){
 *   Controllo basato sulla base delle posizione della griglia
 */
 bool Chart::valid(int col, int row){
-    if(col < 1 || col > mapSize) return false;
-    if(row < 1 || row > mapSize) return false;
+    if(col < 0 || col > mapSize) return false;
+    if(row < 0 || row > mapSize) return false;
     return true;
 }
 
@@ -42,9 +47,30 @@ bool Chart::valid(int col, int row){
 *   Controllo della parte alfa del testo
 *   Per poter usare anche la notazione alfanumerica
 */
-bool Chart::valid(std::string coordinate){
-    char end = 'a' + mapSize;
-    if(coordinate[0] - end > 0 || coordinate[0] < 'a') return false;
+bool Chart::valid(std::string tile){
+    char end;
+    if(tile[0] >= 'y' && tile[0] >= 'k'){
+        end =  'a' + mapSize + 5;
+    } else if (tile[0] >= 'k'){
+        end = 'a' + mapSize + 2;
+    } else {
+        end = 'a' + mapSize;
+    }
+    if(tile[0] - end >= 0 || tile[0] < 'a') return false;
+    if(tile.length() <= 3){
+        if(tile.length() == 3){
+            int test = std::stoi(tile.substr(1, 2)) - 1;
+            return valid(test, test);
+        }
+        if(tile.length() == 2){
+            int test = std::stoi(tile.substr(1, 1)) - 1;
+            return valid(test, test);
+        }
+    }
+    else{ 
+        return false;
+    }
+
     return true;
 }
 
@@ -64,6 +90,39 @@ std::string Chart::show(){
         output += "\n";
     } 
     return output;
+}
+
+/*show_coordinate
+*   Mostra la griglia attuale
+*   +   Con le coordinate ai lati della griglia
+*
+*   Ritorna come stringa
+*/
+std::string Chart::show_coordinate(){
+    char slot = 'A';
+    std::string out = "\n";
+    for (int i = 0, s = 0; i < mapSize; i++, s++){
+        if(s==9) s+=2;
+        if(s==21) s+=3;
+        out += slot + s;
+        for(int j = 0; j < mapSize; j++){
+            out += "[";
+            out += chart[i][j];  
+            out += "]";
+        }
+        out += "\n";
+    } 
+    for(int i = 1; i <= mapSize; i++){
+        if(i <= 10){
+            out += "  ";
+        } else {
+            out += " ";
+        }
+
+        out += std::to_string(i);
+    }
+    out += "\n";
+    return out;
 }
 
 /*clear
@@ -98,20 +157,29 @@ char Chart::getTile(int col, int row){
     return this->chart[col][row];
 }
 
-/*
-*
-*
+/*getTile
+*   Ritorna il valore della casella scelta
+*   
+*   Ritorna il valore in base alla coordinata in base alfanumerica
 */
 char Chart::getTile(std::string coordinate){
     int x, y;
     try{
         if(!valid(coordinate)) throw(coordinate);
+        if(coordinate.length()==3){
+            y = std::stoi(coordinate.substr(1, 2)) - 1;
+        } else if (coordinate.length()==2){
+            y = std::stoi(coordinate.substr(1, 1)) - 1;
+        } else {
+             throw(coordinate.length());
+        }
+        x = letterToCoordinate(coordinate);
     } catch(int invalid){
         return 0;
     } catch(std::string coordinate){
         return 1;
     }
-    return chart[y][x];
+    return getTile(x, y);
 }
 
 /*getMapSize
@@ -121,13 +189,14 @@ int Chart::getMapSize(){
     return this->mapSize;
 }
 
+
 /*setTile
 *   Imposta la casella con il valore con il valore desiderato
 *
 *   Usa le coordinate numeriche per individuare la locazione
 */
 char Chart::setTile(int row, int col, char sub){
-    if(valid(col, row)) this->chart[row][col] = sub;
+    this->chart[row][col] = sub;
     return sub;
 }
 
@@ -140,7 +209,7 @@ char Chart::setTile(int row, int col, char sub){
 */
 char Chart::setTile(std::string tile, char sub){
     try{
-        if(!valid(tile)) throw(tile);
+        if(!valid(tile)) throw(tile.length());
         if(tile.length()==3){
             return setTile(letterToCoordinate(tile), (std::stoi(tile.substr(1, 2)) - 1), sub);
         } else if (tile.length()==2){
@@ -149,9 +218,9 @@ char Chart::setTile(std::string tile, char sub){
              throw(tile.length());
         }
     } catch(int invalid){
-        return 0;
+        return sub;
     } catch(std::string coordinate){
-        return 1;
+        return sub;
     }
 }
 

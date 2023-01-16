@@ -1,6 +1,7 @@
 #ifndef CHARTS_H
 #define CHARTS_H
 
+#include <cctype>
 #include <string>
 #include <vector>
 
@@ -13,12 +14,18 @@ private:
     int letterToCoordinate(std::string coordinate);
 
 public:
+    //constructor
     Chart(int mapSize = 12);
-    Chart(const Chart & refObject, int mapSize = 12);
+
+    //copy constructor
+    Chart(const Chart& refObject);
+
+    ~Chart(){};
 
     bool valid(int col, int row);
     bool valid(std::string coordinate);
     std::string show();
+    std::string show_coordinate();
     void clear();
 
     //Getter
@@ -36,39 +43,46 @@ std::ostream &operator<<(std::ostream &os, Chart &chart);
 bool operator==(Chart map1, Chart map2);
 bool operator!=(Chart map1, Chart map2);
 
-class DefenseC : public Chart{
+class DefenceC : public Chart{
     
 private:
-    const char bShip = 'C', sShip = 'S', sub = 'E';
-    int ships;
+    static const char bShip = 'C', sShip = 'S', sub = 'E';
+    int bships;
 
 public:
-    DefenseC(int mapSize, int ships = 6): Chart(mapSize){
-        this->ships = ships;
-    };
-    DefenseC(const Chart & refObject, int ships = 6) : Chart(refObject){
-        this->ships = ships;
+    //constructor
+    DefenceC(int mapSize = 12, int bships = 0): Chart(mapSize){
+        this->bships = bships;
     };
 
+    //copy constructor
+    DefenceC(const Chart& refObject, int bships = 0) : Chart(refObject){
+        this->bships = bships;
+    };
+
+    int addShip();
+    int removeShip();
+
+    //getter
     int shipsCounter();
 };
+
+std::ostream &operator<<(std::ostream &os, DefenceC &chart);
 
 class AttackC : public Chart{
 
 private:
-    const char miss = 'O', hit = 'x', scan = 'Y';
-    int ships; 
+    static const char miss = 'O', hit = 'x', scan = 'Y';
 
 public:
-    AttackC(int mapSize, int ships = 6): Chart(mapSize){
-        this->ships = ships;
-    };
-    AttackC(const Chart & refObject, int ships = 6) : Chart(refObject){
-        this->ships = ships;
-    };
+    //constructor
+    AttackC(int mapSize = 12): Chart(mapSize){};
 
-    int shipsCounter();
-    attack(DefenseC enemyChart);
+    //copy constructor
+    AttackC(const Chart& refObject) : Chart(refObject){};
+
 };
+
+std::ostream &operator<<(std::ostream &os, AttackC &chart);
 
 #endif
