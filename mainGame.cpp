@@ -43,12 +43,63 @@ pair<string,string> createXY(int dim){
 	return make_pair(t1,t2);
 }
 
-bool playTurn(int turncount)
+string RndTileSelector(){
+	char start='a';
+	char random_alpha;
+	int random_y;
+	string t;
+	srand(time(0));
+	random_alpha=start+rand()%12;
+	random_y=rand()%12+1;
+	if(random_alpha=='j'||random_alpha=='k'){
+		random_alpha+=3;
+	}
+	t=random_alpha+to_string(random_y);
+	return t;
+}
+Player botVsbotGame(Player p1, Player p2, int turncount){
+	for(int i=turncount; i>=0; i++){
+		if(i%2==0){
+			move=rand()%3+1;
+			switch{
+				case 1:
+					p1.shot(p1.getShip(RndTileSelector()), RndTileSelector(), p2);
+					break;
+				case 2:
+					p1.move_heal(p1.getShip(RndTileSelector()), RndTileSelector());
+					break;
+				case 3:
+					p1.move_scan(p1.getShip(RndTileSelector()), RndTileSelector(), p2);
+					break;
+			}
+		}else{
+			move=rand()%3+1;
+			switch{
+				case 1:
+					p2.shot(p2.getShip(RndTileSelector()), RndTileSelector(), p1);
+					break;
+				case 2:
+					p2.move_heal(p2.getShip(RndTileSelector()), RndTileSelector());
+					break;
+				case 3:
+					p2.move_scan(p2.getShip(RndTileSelector()), RndTileSelector(), p1);
+					break;
+			}
+		}
+	}
+	/*std::map<std::string, Ship*>::iterator it = p1.shipLegend().begin();
+            while (it != p1.shipLegend().end()){
+                if(it->second == ships){
+                    a_grid.setTile(it->first, 'X');
+                }
+                it++;
+            }
+	if(*/
+}
 Player botVsbot(Player p1,Player p2, int turncount){
 	pair<string,string>t=createXY(5);
 	bool created=true;
-	bool endturn=false;
-	int random_action;
+	int random_move;
 	Battleship bs1(t.first, t.second);
 	created=p1.addShip(t.first, t.second, bs1);
 	cout<<"bs1 created"<<endl;
@@ -197,9 +248,8 @@ Player botVsbot(Player p1,Player p2, int turncount){
 	}while(created==false);
 	cout<<t.first<<" "<<t.second<<endl;
 	cout<<p2<<endl;
-	do{
-		
-	}while(endturn==false);
+	botVsbotGame(Player p1, Player p2, int turncount);
+	
 	/*Battleship bs1(s1.first, s1.second), bs2(s2.first, s2.second), bs3(s3.first, s3.second), bs4(s4.first, s4.second);
     Support    ss1(s5.first, s5.second), ss2(s6.first, s6.second), ss3(s7.first, s7.second), ss4(s8.first, s8.second);
     Submarine  es1(s9.first, s9.second), es2(s0.first, s0.second);
