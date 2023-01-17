@@ -55,6 +55,7 @@ bool Player::obstacles(std::string stern, std::string bow, Ship* ship){
             start[0]++;
         }
     }
+    if(d_grid.getTile(end)!=' ') return true;
     return false;
 }
 
@@ -314,9 +315,9 @@ std::string Player::setUsername(std::string username){
 }
 
 std::ostream &operator<<(std::ostream &os, Player &player){
-    std::string out = "La tua plancia:";
+    std::string out = "Plancia di difesa:";
     out +=  player.getDefenceGrid().show_coordinate();
-    out += "\nLa plancia nemica:";
+    out += "\nPlancia di attacco:";
     out += player.getAttackGrid().show_coordinate();
     os<<out;
     return os;

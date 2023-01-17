@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <map>
+#include <random>
 #include <cstdlib>
 #include <ctime>
 #include "headers/player.h"
@@ -14,29 +15,28 @@ using namespace std;
 pair<string,string> createXY(int dim){
 	char start='a';
 	char random_alpha;
+	char random_skip;
 	int random_y;
 	int random_rotation=rand()%2;
+	random_device rd;
+	mt19937 gen(rd());
+	uniform_int_distribution<int> dis(0,13);
 	string t1, t2;
-	srand(time(0));
+	srand(time(NULL));
 	if(random_rotation==1){
 		do{
-			random_alpha=start+rand()%12;
-			random_y=rand()%12+1;
-			if(random_alpha=='j'||random_alpha=='k'){
-				random_alpha+=3;
-			}
+			random_alpha=start+dis(gen);
+			random_y=dis(gen)+1;
 			t1=random_alpha+to_string(random_y);
 			t2=random_alpha+to_string(random_y+(dim-1));
 		}while((random_y+(dim-1)>12));
 	}else{
 		do{
-			random_alpha=start+rand()%12;
-			random_y=rand()%12+1;
-			if(random_alpha=='j'||random_alpha=='k'){
-				random_alpha+=3;
-			}
+			random_alpha=start+dis(gen);
+			random_y=dis(gen)+1;
+			random_skip=(random_alpha+(dim-1)>'j'&&dim>1)?(random_alpha+(dim-1)+2): random_alpha+(dim-1);
 			t1=random_alpha+to_string(random_y);
-			t2=(random_alpha+(dim-1));
+			t2=random_skip;
 			t2+=to_string(random_y);
 		}while((random_alpha+(dim-1))>'l');
 	}
@@ -48,20 +48,21 @@ string RndTileSelector(){
 	char random_alpha;
 	int random_y;
 	string t;
-	srand(time(0));
-	random_alpha=start+rand()%12;
-	random_y=rand()%12+1;
-	if(random_alpha=='j'||random_alpha=='k'){
-		random_alpha+=3;
-	}
+	random_device rd;
+	mt19937 gen(rd());
+	uniform_int_distribution<int> dis(0,11);
+	random_alpha=start+dis(gen);
+	random_y=dis(gen)+1;
 	t=random_alpha+to_string(random_y);
 	return t;
 }
-Player botVsbotGame(Player p1, Player p2, int turncount){
+void botVsbotGame(Player p1, Player p2, int turncount){
+	int move;
+	srand(time(NULL));
 	for(int i=turncount; i>=0; i++){
 		if(i%2==0){
 			move=rand()%3+1;
-			switch{
+			switch(move){
 				case 1:
 					p1.shot(p1.getShip(RndTileSelector()), RndTileSelector(), p2);
 					break;
@@ -74,7 +75,7 @@ Player botVsbotGame(Player p1, Player p2, int turncount){
 			}
 		}else{
 			move=rand()%3+1;
-			switch{
+			switch(move){
 				case 1:
 					p2.shot(p2.getShip(RndTileSelector()), RndTileSelector(), p1);
 					break;
@@ -103,11 +104,11 @@ Player botVsbot(Player p1,Player p2, int turncount){
 	Battleship bs1(t.first, t.second);
 	created=p1.addShip(t.first, t.second, bs1);
 	cout<<"bs1 created"<<endl;
+	cout<<t.first<<" "<<t.second<<endl;
 	do{
 		t=createXY(5);
 		Battleship bs2(t.first, t.second);
 		created=p1.addShip(t.first, t.second, bs2);
-		cout<<"bs2 "<<created<<endl;
 		if(created){
 			cout<<"bs2 created"<<endl;
 		}
@@ -117,7 +118,6 @@ Player botVsbot(Player p1,Player p2, int turncount){
 		t=createXY(5);
 		Battleship bs3(t.first, t.second);
 		created=p1.addShip(t.first, t.second, bs3);
-		cout<<"bs3 "<<created<<endl;
 		if(created){
 			cout<<"bs3 created"<<endl;
 		}
@@ -127,7 +127,6 @@ Player botVsbot(Player p1,Player p2, int turncount){
 		t=createXY(3);
 		Support ss1(t.first, t.second);
 		created=p1.addShip(t.first, t.second, ss1);
-		cout<<"ss1 "<<created<<endl;
 		if(created){
 			cout<<"ss1 created"<<endl;
 		}
@@ -137,7 +136,6 @@ Player botVsbot(Player p1,Player p2, int turncount){
 		t=createXY(3);
 		Support ss2(t.first, t.second);
 		created=p1.addShip(t.first, t.second, ss2);
-		cout<<"ss2 "<<created<<endl;
 		if(created){
 			cout<<"ss2 created"<<endl;
 		}
@@ -147,7 +145,6 @@ Player botVsbot(Player p1,Player p2, int turncount){
 		t=createXY(3);
 		Support ss3(t.first, t.second);
 		created=p1.addShip(t.first, t.second, ss3);
-		cout<<"ss3 "<<created<<endl;
 		if(created){
 			cout<<"ss3 created"<<endl;
 		}
@@ -157,7 +154,6 @@ Player botVsbot(Player p1,Player p2, int turncount){
 		t=createXY(1);
 		Submarine sb1(t.first, t.second);
 		created=p1.addShip(t.first, t.second, sb1);
-		cout<<"sb1 "<<created<<endl;
 		if(created){
 			cout<<"sb1 created"<<endl;
 		}
@@ -167,23 +163,23 @@ Player botVsbot(Player p1,Player p2, int turncount){
 		t=createXY(1);
 		Submarine sb2(t.first, t.second);
 		created=p1.addShip(t.first, t.second, sb2);
-		cout<<"sb2 "<<created<<endl;
 		if(created){
 			cout<<"sb2 created"<<endl;
 		}
 	}while(created==false);
 	cout<<t.first<<" "<<t.second<<endl;
-	cout<<p1<<endl;
+	cout<<"player 1: \n"<<p1<<endl;
+	t=createXY(5);
 	Battleship bs4(t.first, t.second);
 	created=p2.addShip(t.first, t.second, bs4);
-	cout<<"bs1 created"<<endl;
+	cout<<"bs4 created"<<endl;
+	cout<<t.first<<" "<<t.second<<endl;
 	do{
 		t=createXY(5);
 		Battleship bs5(t.first, t.second);
 		created=p2.addShip(t.first, t.second, bs5);
-		cout<<"bs2 "<<created<<endl;
 		if(created){
-			cout<<"bs2 created"<<endl;
+			cout<<"bs5 created"<<endl;
 		}
 	}while(created==false);
 	cout<<t.first<<" "<<t.second<<endl;
@@ -191,9 +187,8 @@ Player botVsbot(Player p1,Player p2, int turncount){
 		t=createXY(5);
 		Battleship bs6(t.first, t.second);
 		created=p2.addShip(t.first, t.second, bs6);
-		cout<<"bs3 "<<created<<endl;
 		if(created){
-			cout<<"bs3 created"<<endl;
+			cout<<"bs6 created"<<endl;
 		}
 	}while(created==false);
 	cout<<t.first<<" "<<t.second<<endl;
@@ -201,9 +196,8 @@ Player botVsbot(Player p1,Player p2, int turncount){
 		t=createXY(3);
 		Support ss4(t.first, t.second);
 		created=p2.addShip(t.first, t.second, ss4);
-		cout<<"ss1 "<<created<<endl;
 		if(created){
-			cout<<"ss1 created"<<endl;
+			cout<<"ss4 created"<<endl;
 		}
 	}while(created==false);
 	cout<<t.first<<" "<<t.second<<endl;
@@ -211,19 +205,17 @@ Player botVsbot(Player p1,Player p2, int turncount){
 		t=createXY(3);
 		Support ss5(t.first, t.second);
 		created=p2.addShip(t.first, t.second, ss5);
-		cout<<"ss2 "<<created<<endl;
 		if(created){
-			cout<<"ss2 created"<<endl;
+			cout<<"ss5 created"<<endl;
 		}
 	}while(created==false);
 	cout<<t.first<<" "<<t.second<<endl;
 	do{
 		t=createXY(3);
 		Support ss6(t.first, t.second);
-		created=p1.addShip(t.first, t.second, ss6);
-		cout<<"ss3 "<<created<<endl;
+		created=p2.addShip(t.first, t.second, ss6);
 		if(created){
-			cout<<"ss3 created"<<endl;
+			cout<<"ss6 created"<<endl;
 		}
 	}while(created==false);
 	cout<<t.first<<" "<<t.second<<endl;
@@ -231,29 +223,24 @@ Player botVsbot(Player p1,Player p2, int turncount){
 		t=createXY(1);
 		Submarine sb3(t.first, t.second);
 		created=p2.addShip(t.first, t.second, sb3);
-		cout<<"sb1 "<<created<<endl;
 		if(created){
-			cout<<"sb1 created"<<endl;
+			cout<<"sb3 created"<<endl;
 		}
 	}while(created==false);
 	cout<<t.first<<" "<<t.second<<endl;
 	do{
 		t=createXY(1);
 		Submarine sb4(t.first, t.second);
-		created=p1.addShip(t.first, t.second, sb4);
-		cout<<"sb2 "<<created<<endl;
+		created=p2.addShip(t.first, t.second, sb4);
 		if(created){
-			cout<<"sb2 created"<<endl;
+			cout<<"sb4 created"<<endl;
 		}
 	}while(created==false);
 	cout<<t.first<<" "<<t.second<<endl;
-	cout<<p2<<endl;
-	botVsbotGame(Player p1, Player p2, int turncount);
+	cout<<"player 2: \n"<<p2<<endl;
+	//botVsbotGame(Player p1, Player p2, int turncount);
 	
-	/*Battleship bs1(s1.first, s1.second), bs2(s2.first, s2.second), bs3(s3.first, s3.second), bs4(s4.first, s4.second);
-    Support    ss1(s5.first, s5.second), ss2(s6.first, s6.second), ss3(s7.first, s7.second), ss4(s8.first, s8.second);
-    Submarine  es1(s9.first, s9.second), es2(s0.first, s0.second);
-	*/
+
 	return p1;
 }
 
