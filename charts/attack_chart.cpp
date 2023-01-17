@@ -1,14 +1,5 @@
 #include "../headers/charts.h"
 
-int AttackC::addShip(){
-    return ++ships;
-}
-
-
-int AttackC::shipsCounter(){
-    return ships;
-}
-
 std::ostream &operator<<(std::ostream &os, AttackC &chart){
     char slot = 'A';
 
