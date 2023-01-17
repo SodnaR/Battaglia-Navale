@@ -67,13 +67,16 @@ bool customization = false;
 int bship_custom = 3, sship_custom = 3, eship_custom = 2;
 int map_custom = 12;
 int turn_custom = 10;
+vector<string> p1_coordinate, p2_coordinate;
 
 pair<string, string> gen_coordinate(int dim){
     int random_orient = rand()%2;
     random_device rd;
     mt19937 gen(rd());
-	uniform_int_distribution<int> rng(0, map_custom);
+	uniform_int_distribution<int> rng(0, (map_custom - 1));
     char random_x1 = 'a' + rng(gen), random_x2;
+    if(random_x1 >= 'j') random_x1 += 2;
+    if(random_x1 >= 'w') random_x1 += 3;
     int random_y = rng(gen) + 1;
     string tile1, tile2;
     if(random_orient){
@@ -99,7 +102,7 @@ Player randomFieldGenerator(){
         do{
             ship = gen_coordinate(5);
             bship = Battleship(ship.first, ship.second);
-        }while(!randomField.addShip(ship.first, ship.second, bship));
+        }while(!randomField.addShip(ship.first, ship.second, bship));    
     }
     ship = gen_coordinate(3);
     Support sship(ship.first, ship.second);
@@ -120,45 +123,85 @@ Player randomFieldGenerator(){
     return randomField;
 }
 
-std::string shipIdentifier(char id, DefenceC defence){
+std::string shipIdentifier(char id){
     string tile;
+    bool identified = false; 
+    /*
+    std::vector<int> myvector (myints,myints+4);
+    std::vector<int>::iterator it;
+
+    it = find (myvector.begin(), myvector.end(), 30);
+    if (it != myvector.end())
+    */
     do{
         tile = gen_coordinate(1).second;
-        std::cout << tile<<" " << std::endl;
-    }while(defence.getTile(tile) != id);
+        std::cout << tile << std::endl;
+    }while(!identified);
     return tile;
 }
 
+vector<string> updateAllCoords(Player player){
+    std::vector<std::string> upToDate;
+    std::map<std::string, Ship*>::iterator it = player.shipLegend().begin();
+    while (it != player.shipLegend().end()){
+        upToDate.push_back(it->first);
+        it++;
+    }
+    return upToDate;
+}
+
+
 Player botVsbot(Player &bot1, Player &bot2){
     bot1 = randomFieldGenerator();
+    p1_coordinate = updateAllCoords(bot1);
     bot2 = randomFieldGenerator();
+    p2_coordinate = updateAllCoords(bot2);
 
+    bot1.setUsername();
+    bot2.setUsername();
     std::cout << endl << bot1 <<"--------------------------------"<< std::endl;
     std::cout << endl << bot2 <<"--------------------------------"<< std::endl;
-
-    for (int i = 1; i <= turn_custom; i++){
-        std::cout << "Turno n." <<i<< std::endl;
-        int rnd_move = 0;
-        switch (rnd_move)
-        {
-        case 0:
-            std::cout <<endl << "Tile per bot1: ";
-            bot1.shot(bot1.getShip(shipIdentifier('C', bot1.getDefenceGrid())), gen_coordinate(1).second, bot2);
-            std::cout << std::endl;
-            break;
-        }
-
-        switch (rnd_move)
-        {
-        case 0:
-            std::cout <<endl << "Tile per bot2: ";
-            bot2.shot(bot2.getShip(shipIdentifier('C', bot2.getDefenceGrid())), gen_coordinate(1).first, bot1);
-            std::cout << std::endl;
-            break;
-        }
-        
-    }
     
+    /*
+    int rnd_move; 
+    for (int i = 1; i <= turn_custom; i++){
+        rnd_move = rand()%3;
+        std::cout << bot1.getUsername()<<" turn: ";
+        switch (rnd_move){
+        case 0:
+            std::cout << "Spara: " << std::endl;
+            do{}while(!bot1.shot(bot1.getShip(shipIdentifier('C')), gen_coordinate(1).second, bot2));
+            break;
+        case 1:
+            std::cout << "Sposta e cura: " << std::endl;
+            do{}while(!bot1.move_heal(bot1.getShip(shipIdentifier('S')), gen_coordinate(1).second));
+            p1_coordinate = updateAllCoords(bot1);
+            break;
+        case 2:
+            std::cout << "Sposta e scansiona: " << std::endl;
+            do{}while(!bot1.move_scan(bot1.getShip(shipIdentifier('E')), gen_coordinate(1).second, bot2));
+            p1_coordinate = updateAllCoords(bot1);
+            break;
+        }
+        rnd_move = rand()%3;
+        std::cout << bot2.getUsername()<<" turn: ";
+        switch (rnd_move){
+        case 0:
+            std::cout << "Spara: " << std::endl;
+            bot2.shot(bot2.getShip(shipIdentifier('C', bot2)), gen_coordinate(1).first, bot1);
+            break;
+        case 1:
+            std::cout << "Sposta e cura: " << std::endl;
+            do{}while(!bot2.move_heal(bot2.getShip(shipIdentifier('S')), gen_coordinate(1).second));
+            p2_coordinate = updateAllCoords(bot2);
+            break;
+        case 2:
+            std::cout << "Sposta e scansiona: " << std::endl;
+            do{}while(!bot2.move_scan(bot2.getShip(shipIdentifier('E')), gen_coordinate(1).second, bot1));
+            p2_coordinate = updateAllCoords(bot2);
+            break;
+        }
+    }*/
     std::cout << endl << bot1 <<"--------------------------------"<< std::endl;
     std::cout << endl << bot2 <<"--------------------------------"<< std::endl;
 

@@ -1,4 +1,5 @@
 #include "../headers/player.h"
+
 /*nextId
 * + variabile
 *
@@ -250,7 +251,7 @@ bool Player::addShip(std::string stern, std::string bow, Ship& ship){
             d_grid.setTile(tile, ship.getId());
         }
     }
-    d_grid.addShip();
+    if(ship.getId() == 'C')d_grid.addShip();
     return true;
 }
 

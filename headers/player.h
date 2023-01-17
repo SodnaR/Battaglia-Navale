@@ -27,7 +27,7 @@ private:
     bool scan(Ship* ship, Player opposite);
     
 protected:
-    //protected variables
+    //protected vari
     static int nextId;
 
 public:
@@ -57,7 +57,7 @@ public:
     std::string getShipCenter(std::string ship_tile);
 
     //setter
-    std::string setUsername(std::string username);
+    std::string setUsername(std::string username = std::to_string(++nextId));
 };
 
 std::ostream &operator<<(std::ostream &os, Player &player);
