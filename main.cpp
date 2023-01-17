@@ -168,6 +168,69 @@ Player insertShips(){
     }
     return p1;
 }
+
+void playerTurn(Player p1, Player p2){
+   	string origin, target;
+   	char move; 
+	cout<<p1.getUsername()<<" è il tuo turno"<<endl;
+	do{    
+		cout<<"inserire coordinate per azione di turno (XYOrigin XYTarget)"<<endl;
+		cin>>origin>>target;
+		if(p1.getDefenceGrid().getTile(origin)==' '){
+			cout<<"coordinate di origine non valide, nessuna nave presente, inserire nuove coordinate"<<endl;
+			cin>>origin;
+		}
+	}while(p1.getDefenceGrid().getTile(origin)==' ');
+	move=p1.getShip(origin)->getId();
+	switch(move){
+		case 'C':
+			p1.shot(p1.getShip(origin), target, p2);
+			break;
+		case 'S':
+			do{
+				p1.move_heal(p1.getShip(origin), target);
+				if(!p1.move_heal(p1.getShip(origin), target)){
+					cout<<"coordinate non valide"<<endl;
+					cout<<"inserire nuova coordinata destinazione valida occupata"<<endl;
+					cin>>origin;
+				}
+			}while(!p1.move_heal(p1.getShip(origin), target));
+			break;
+		case 'E':
+			do{
+				p1.move_scan(p1.getShip(origin), target, p2);
+				if(!p1.move_scan(p1.getShip(origin), target, p2)){
+					cout<<"coordinate non valide"<<endl;
+					cout<<"inserire nuova coordinata destinazione valida non occupata"<<endl;
+					cin>>origin;
+				}
+			}while(!p1.move_scan(p1.getShip(origin), target, p2));
+		break;		    		
+	}
+}
+void botTurn(Player bot, Player p1){
+	int rnd_move;
+	rnd_move = rand()%3;
+	switch (rnd_move){
+	    case 0:
+	        std::cout << "Spara: " << std::endl;
+
+	        do{}while(!bot.shot(bot.getShip(shipIdentifier('C')), gen_coordinate(1).second, p1));
+	        break;
+	    case 1:
+	        std::cout << "Sposta e cura: " << std::endl;
+	        do{}while(!bot.move_heal(bot.getShip(shipIdentifier('S')), gen_coordinate(1).second));
+
+	        p1_coordinate = updateAllCoords(bot);
+	        break;
+	    case 2:
+	        std::cout << "Sposta e scansiona: " << std::endl;
+	        do{}while(!bot.move_scan(bot.getShip(shipIdentifier('E')), gen_coordinate(1).second, p1));
+	        //p1_coordinate = updateAllCoords(bot);
+	        break;
+	    }
+}
+
 std::string shipIdentifier(char id){
     string tile;
     bool identified = false; 
@@ -268,128 +331,32 @@ string playerVsbot(Player &p1, Player &bot){
     bot = randomFieldGenerator();
     int coin=rand()%2;
     int turncounter=turn_custom;
-    string origin, target;
+    string winner;
     cout<<"inserire le coordinate delle proprie navi"<<endl;
     p1=insertShips();
-    char move;
-    int rnd_move;
+
     if(coin==0){
+    	cout<<"bot starts"<<endl;
    		for(int i=1; i<=turn_custom; i++){
-			cout<<"bot starts"<<endl;
-			rnd_move = rand()%3;
-		    std::cout << bot.getUsername()<<" turn: ";
-		    switch (rnd_move){
-		    case 0:
-		        std::cout << "Spara: " << std::endl;
-
-		        do{}while(!bot.shot(bot.getShip(shipIdentifier('C')), gen_coordinate(1).second, p1));
-		        break;
-		    case 1:
-		        std::cout << "Sposta e cura: " << std::endl;
-		        do{}while(!bot.move_heal(bot.getShip(shipIdentifier('S')), gen_coordinate(1).second));
-
-		        p1_coordinate = updateAllCoords(bot);
-		        break;
-		    case 2:
-		        std::cout << "Sposta e scansiona: " << std::endl;
-		        do{}while(!bot.move_scan(bot.getShip(shipIdentifier('E')), gen_coordinate(1).second, p1));
-		        //p1_coordinate = updateAllCoords(bot);
-		        break;
-		    }
-		    do{    
-				cout<<"inserire coordinate per azione di turno (XYOrigin XYTarget)"<<endl;
-				cin>>origin>>target;
-				if(p1.getDefenceGrid().getTile(origin)==' '){
-					cout<<"coordinate di origine non valide, nessuna nave presente, inserire nuove coordinate"<<endl;
-					cin>>origin;
-				}
-			}while(p1.getDefenceGrid().getTile(origin)==' ');
-		    move=p1.getShip(origin)->getId();
-		    switch(move){
-		    	case 'C':
-		    		p1.shot(p1.getShip(origin), target, bot);
-		    		break;
-		    	case 'S':
-		    		do{
-		    			p1.move_heal(p1.getShip(origin), target);
-		    			if(!p1.move_heal(p1.getShip(origin), target)){
-		    				cout<<"coordinate non valide"<<endl;
-		    				cout<<"inserire nuova coordinata destinazione valida occupata"<<endl;
-		    				cin>>origin;
-		    			}
-		    		}while(!p1.move_heal(p1.getShip(origin), target));
-		    		break;
-		    	case 'E':
-		    		do{
-		    			p1.move_scan(p1.getShip(origin), target, bot);
-		    			if(!p1.move_scan(p1.getShip(origin), target, bot)){
-		    				cout<<"coordinate non valide"<<endl;
-		    				cout<<"inserire nuova coordinata destinazione valida non occupata"<<endl;
-		    				cin>>origin;
-		    			}
-		    		}while(!p1.move_scan(p1.getShip(origin), target, bot));
-		    	break;		    		
-		    }
+		    cout <<"bot turn: ";
+		    botTurn(bot,p1);
+			playerTurn(p1, bot);
 			turncounter--;
-    	}
+			if(winner!="draw"){
+    			return winner;
+    		}
+		}
     }else{
     	for(int i=0; i<=turn_custom; i++){
-    		do{    
-				cout<<"inserire coordinate per azione di turno (XYOrigin XYTarget)"<<endl;
-				cin>>origin>>target;
-				if(p1.getDefenceGrid().getTile(origin)==' '){
-					cout<<"coordinate di origine non valide, nessuna nave presente, inserire nuove coordinate"<<endl;
-					cin>>origin;
-				}
-			}while(p1.getDefenceGrid().getTile(origin)==' ');
-			move=p1.getShip(origin)->getId();
-			switch(move){
-				case 'C':
-					p1.shot(p1.getShip(origin), target, bot);
-					break;
-				case 'S':
-					do{
-						p1.move_heal(p1.getShip(origin), target);
-						if(!p1.move_heal(p1.getShip(origin), target)){
-							cout<<"coordinate non valide"<<endl;
-							cout<<"inserire nuova coordinata destinazione valida occupata"<<endl;
-							cin>>origin;
-						}
-					}while(!p1.move_heal(p1.getShip(origin), target));
-					break;
-				case 'E':
-					do{
-						p1.move_scan(p1.getShip(origin), target, bot);
-						if(!p1.move_scan(p1.getShip(origin), target, bot)){
-							cout<<"coordinate non valide"<<endl;
-							cout<<"inserire nuova coordinata destinazione valida non occupata"<<endl;
-							cin>>origin;
-						}
-					}while(!p1.move_scan(p1.getShip(origin), target, bot));
-				break;		    		
-			}
-			rnd_move = rand()%3;
-		    cout <<"bot turn: ";
-		    switch (rnd_move){
-				case 0:
-				    std::cout << "Spara: " << std::endl;
-
-				    do{}while(!bot.shot(bot.getShip(shipIdentifier('C')), gen_coordinate(1).second, p1));
-				    break;
-				case 1:
-				    std::cout << "Sposta e cura: " << std::endl;
-				    do{}while(!bot.move_heal(bot.getShip(shipIdentifier('S')), gen_coordinate(1).second));
-
-				    p1_coordinate = updateAllCoords(bot);
-				    break;
-				case 2:
-				    std::cout << "Sposta e scansiona: " << std::endl;
-				    do{}while(!bot.move_scan(bot.getShip(shipIdentifier('E')), gen_coordinate(1).second, p1));
-				    //p1_coordinate = updateAllCoords(bot);
-				    break;
-		    	}
-		    }
-    	}		
+    		cout<<p1.getUsername()<<" turn: "<<endl;
+			playerTurn(p1, bot);
+			botTurn(bot,p1);
+		    turncounter--;
+		    if(winner!="draw"){
+    			return winner;
+    		}
+    	}
+    }		
 	if(turncounter==0){
 		cout<<"partita finita per limite turni raggiunto"<<endl;
 		return "draw";
@@ -400,161 +367,32 @@ string playerVsbot(Player &p1, Player &bot){
 string playerVsplayer(Player &p1, Player &p2){
 	int coin=rand()%2;
     int turncounter=turn_custom;
-    string origin, target;
+    string winner;
     cout<<p1.getUsername()<<" inserire le coordinate delle proprie navi"<<endl;
     p1=insertShips();
     cout<<p2.getUsername()<<" inserire le coordinate delle proprie navi"<<endl;
     p2=insertShips();
-    char move;
-    int rnd_move;
     if(coin==0){
-    	cout<<p1.getUsername()<<" è il tuo turno"<<endl;
-    	for(int i=0; i<=turn_custom; i++){
-    		do{    
-				cout<<"inserire coordinate per azione di turno (XYOrigin XYTarget)"<<endl;
-				cin>>origin>>target;
-				if(p1.getDefenceGrid().getTile(origin)==' '){
-					cout<<"coordinate di origine non valide, nessuna nave presente, inserire nuove coordinate"<<endl;
-					cin>>origin;
-				}
-			}while(p1.getDefenceGrid().getTile(origin)==' ');
-			move=p1.getShip(origin)->getId();
-			switch(move){
-				case 'C':
-					p1.shot(p1.getShip(origin), target, p2);
-					break;
-				case 'S':
-					do{
-						p1.move_heal(p1.getShip(origin), target);
-						if(!p1.move_heal(p1.getShip(origin), target)){
-							cout<<"coordinate non valide"<<endl;
-							cout<<"inserire nuova coordinata destinazione valida occupata"<<endl;
-							cin>>origin;
-						}
-					}while(!p1.move_heal(p1.getShip(origin), target));
-					break;
-				case 'E':
-					do{
-						p1.move_scan(p1.getShip(origin), target, p2);
-						if(!p1.move_scan(p1.getShip(origin), target, p2)){
-							cout<<"coordinate non valide"<<endl;
-							cout<<"inserire nuova coordinata destinazione valida non occupata"<<endl;
-							cin>>origin;
-						}
-					}while(!p1.move_scan(p1.getShip(origin), target, p2));
-				break;		    		
-			}
-    		cout<<p2.getUsername()<<" è il tuo turno"<<endl;
-    		do{    
-				cout<<"inserire coordinate per azione di turno (XYOrigin XYTarget)"<<endl;
-				cin>>origin>>target;
-				if(p2.getDefenceGrid().getTile(origin)==' '){
-					cout<<"coordinate di origine non valide, nessuna nave presente, inserire nuove coordinate"<<endl;
-					cin>>origin;
-				}
-			}while(p2.getDefenceGrid().getTile(origin)==' ');
-			move=p2.getShip(origin)->getId();
-			switch(move){
-				case 'C':
-					p2.shot(p2.getShip(origin), target, p1);
-					break;
-				case 'S':
-					do{
-						p2.move_heal(p2.getShip(origin), target);
-						if(!p1.move_heal(p1.getShip(origin), target)){
-							cout<<"coordinate non valide"<<endl;
-							cout<<"inserire nuova coordinata destinazione valida occupata"<<endl;
-							cin>>origin;
-						}
-					}while(!p2.move_heal(p2.getShip(origin), target));
-					break;
-				case 'E':
-					do{
-						p2.move_scan(p2.getShip(origin), target, p1);
-						if(!p2.move_scan(p1.getShip(origin), target, p1)){
-							cout<<"coordinate non valide"<<endl;
-							cout<<"inserire nuova coordinata destinazione valida non occupata"<<endl;
-							cin>>origin;
-						}
-					}while(!p2.move_scan(p2.getShip(origin), target, p1));
-				break;		    		
-			}
-			turncounter--;
-		}
+    	for(int i=1; i<=turn_custom; i++){
+    		playerTurn(p1, p2);
+    		playerTurn(p2, p1);
+    		turncounter--;
+    		winner=CheckWinner(p1, p2);
+    		if(winner!="draw"){
+    			return winner;
+    		}
+    	}
 	}else{
-    	for(int i=0; i<=turn_custom; i++){
-    		do{    
-				cout<<"inserire coordinate per azione di turno (XYOrigin XYTarget)"<<endl;
-				cin>>origin>>target;
-				if(p2.getDefenceGrid().getTile(origin)==' '){
-					cout<<"coordinate di origine non valide, nessuna nave presente, inserire nuove coordinate"<<endl;
-					cin>>origin;
-				}
-			}while(p2.getDefenceGrid().getTile(origin)==' ');
-			move=p2.getShip(origin)->getId();
-			switch(move){
-				case 'C':
-					p2.shot(p2.getShip(origin), target, p1);
-					break;
-				case 'S':
-					do{
-						p2.move_heal(p2.getShip(origin), target);
-						if(!p1.move_heal(p1.getShip(origin), target)){
-							cout<<"coordinate non valide"<<endl;
-							cout<<"inserire nuova coordinata destinazione valida occupata"<<endl;
-							cin>>origin;
-						}
-					}while(!p2.move_heal(p2.getShip(origin), target));
-					break;
-				case 'E':
-					do{
-						p2.move_scan(p2.getShip(origin), target, p1);
-						if(!p2.move_scan(p1.getShip(origin), target, p1)){
-							cout<<"coordinate non valide"<<endl;
-							cout<<"inserire nuova coordinata destinazione valida non occupata"<<endl;
-							cin>>origin;
-						}
-					}while(!p2.move_scan(p2.getShip(origin), target, p1));
-				break;		    		
-			}
-			cout<<p1.getUsername()<<" è il tuo turno"<<endl;
-    		do{    
-				cout<<"inserire coordinate per azione di turno (XYOrigin XYTarget)"<<endl;
-				cin>>origin>>target;
-				if(p1.getDefenceGrid().getTile(origin)==' '){
-					cout<<"coordinate di origine non valide, nessuna nave presente, inserire nuove coordinate"<<endl;
-					cin>>origin;
-				}
-			}while(p1.getDefenceGrid().getTile(origin)==' ');
-			move=p1.getShip(origin)->getId();
-			switch(move){
-				case 'C':
-					p1.shot(p1.getShip(origin), target, p2);
-					break;
-				case 'S':
-					do{
-						p1.move_heal(p1.getShip(origin), target);
-						if(!p1.move_heal(p1.getShip(origin), target)){
-							cout<<"coordinate non valide"<<endl;
-							cout<<"inserire nuova coordinata destinazione valida occupata"<<endl;
-							cin>>origin;
-						}
-					}while(!p1.move_heal(p1.getShip(origin), target));
-					break;
-				case 'E':
-					do{
-						p1.move_scan(p1.getShip(origin), target, p2);
-						if(!p1.move_scan(p1.getShip(origin), target, p2)){
-							cout<<"coordinate non valide"<<endl;
-							cout<<"inserire nuova coordinata destinazione valida non occupata"<<endl;
-							cin>>origin;
-						}
-					}while(!p1.move_scan(p1.getShip(origin), target, p2));
-				break;		    		
-			}
-		}
-		turncounter--;
-    }
+		for(int i=1; i<=turn_custom; i++){
+    		playerTurn(p2, p1);
+    		playerTurn(p1, p2);
+    		turncounter--;
+    		winner=CheckWinner(p1, p2);
+    		if(winner!="draw"){
+    			return winner;
+    		}
+    	}
+	}
 	if(turncounter==0){
 		cout<<"partita finita per limite turni raggiunto"<<endl;
 		return "draw";
