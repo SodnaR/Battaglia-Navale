@@ -12,20 +12,22 @@
 class Player{
 
 private:
+    //private variables
     std::string name;
     AttackC a_grid;
     DefenceC d_grid;
     std::map<std::string, Ship*> ships;
     
+    //private functions
     bool validPosition(std::string tile, std::string toTile);
     bool obstacles(std::string stern, std::string bow, Ship* ship);
-    char addToChart(std::string tile, char id);
-    
+    char addToChart(std::string tile, char id);    
     bool move(std::string stern, std::string bow, Ship* ship);
     bool heal(Ship* ship);
     bool scan(Ship* ship, Player opposite);
     
 protected:
+    //protected vari
     static int nextId;
 
 public:
@@ -36,13 +38,12 @@ public:
     //copy constructor
     Player(const Player& refObject);
 
+    //destructor
     ~Player(){};
 
-    Ship addShip(std::string stern, std::string bow, Ship& ship);
-    Ship addShip(int stern[], int bow[], Ship& ship);
-
+    //public functions
+    bool addShip(std::string stern, std::string bow, Ship& ship);
     bool removeShip(Ship* ship);
-
     bool shot(Ship* bship, std::string tile, Player &opposite);
     bool move_heal(Ship* sship, std::string tile);
     bool move_scan(Ship* eship, std::string tile, Player &opposite);
@@ -56,7 +57,7 @@ public:
     std::string getShipCenter(std::string ship_tile);
 
     //setter
-    std::string setUsername(std::string username);
+    std::string setUsername(std::string username = std::to_string(++nextId));
 };
 
 std::ostream &operator<<(std::ostream &os, Player &player);

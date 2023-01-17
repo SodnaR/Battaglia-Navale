@@ -21,7 +21,8 @@ protected:
 
 public:
     Ship(int dim, std::string stern, std::string bow, char id);
-    Ship(int dim, int stern[], int bow[], char id);
+    
+    Ship(const Ship& refObject);
 
     ~Ship(){};
     
@@ -29,7 +30,6 @@ public:
     std::string locateCenter(int stern[], int bow[]);
 
     int hit();
-    void sink();
     int heal();
     
     //getter
@@ -51,35 +51,35 @@ bool operator!=(Ship ship1, Ship ship2);
 
 struct Battleship : public Ship{
 
-private:
-    char cavallo = 'C';
-
 public:
 
     Battleship(std::string stern, std::string bow, char id = 'C') : Ship(5, stern, bow, id){
     }
-    Battleship(int stern[], int bow[], char id = 'C') : Ship(5, stern, bow, id){
-    }
+
+    Battleship(const Battleship& refObject) : Ship(refObject){
+    }; 
 
 };
 
-struct Support : public Ship{
 
-private:
+struct Support : public Ship{
 
 public:
     Support(std::string stern, std::string bow, char id = 'S') : Ship(3, stern, bow, id){
     };
 
+    Support(const Support& refObject) : Ship(refObject){
+    }; 
 };
 
 struct Submarine : public Ship{
 
-private:
-
 public:
     Submarine(std::string stern, std::string bow, char id = 'E') : Ship(1, stern, bow, id){
     }
+
+    Submarine(const Submarine& refObject) : Ship(refObject){
+    }; 
 
 };
 

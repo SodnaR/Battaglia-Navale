@@ -1,27 +1,42 @@
 #include "../headers/player.h"
 
+#include <iostream>
+
+/*nextId
+* + variabile
+*
+*   Serve come identificatore del giocatore
+*   Aggiornato alla creazione di ogni giocatore
+*/
 int Player::nextId = 0;
 
 Player::Player(std::string name){
-    this->name = name;
-
+    this->name = "bot" + name;
     this->a_grid = AttackC();
     this->d_grid = DefenceC();
 }
 
 Player::Player(DefenceC d_grid, std::string name){
-    this->name = std::to_string(++nextId);
+    this->name = "bot" + name;
     this->a_grid = AttackC(d_grid.getMapSize());
     this->d_grid = DefenceC(d_grid);
 }
 
 Player::Player(const Player& refObject){
+    this->name = refObject.name;
     this->a_grid = refObject.a_grid;
     this->d_grid = refObject.d_grid;
     this->ships = refObject.ships;
 }
 
-
+/*validPosition
+*   Controlla i valori dei e tra i tile della nave
+*
+*   Ritorna se i valori rispettano gli standard progettuali
+*   - lunghezza designata di un tile (3)["n12"]
+*   - se è presente all'interno della tabella
+*   - la posizione fra i tile rispetta un asse [verticale, orizzontale]
+*/
 bool Player::validPosition(std::string tile, std::string toTile){
     try{
         if(tile.length() < 2 || tile.length() > 3) throw(tile);
@@ -34,6 +49,12 @@ bool Player::validPosition(std::string tile, std::string toTile){
     return true;
 }
 
+/*obstacles
+*   Controlla se tra le posizione ed i tile stessi son presenti solo spazi vuoti
+*
+*   Ritorna se quindi è possibile inserire la nave in un determinato spazio
+*   - se tra la poppa e la prua non ci sono ostacoli
+*/
 bool Player::obstacles(std::string stern, std::string bow, Ship* ship){
     std::string start = stern, end = bow;
     while(start != end){
@@ -55,14 +76,26 @@ bool Player::obstacles(std::string stern, std::string bow, Ship* ship){
             start[0]++;
         }
     }
+    if(d_grid.getTile(end) != ' '){
+        return true;
+    }
     return false;
 }
 
+/*addToChart
+*   Aggiunge alla griglia di difesa l'identificativo assegnato dalla nave
+*/
 char Player::addToChart(std::string tile, char id){
     d_grid.setTile(tile, id);
     return id;
 }
 
+/*move
+*   Permette di spostare la nave tra i vari blocchi della tabella
+*
+*   Conseguente cambio di coordinate per ricercarla
+*   Ritorna bool, in base all'esito e la possibilità nello spostamento
+*/
 bool Player::move(std::string stern, std::string bow, Ship* ship){
     if(ship->getArmor() == 0) return false;
     std::string center = ship->getCenter();
@@ -107,6 +140,13 @@ bool Player::move(std::string stern, std::string bow, Ship* ship){
     return true;
 }
 
+/*heal
+*  Permette alle navi di ripristinare _plate
+*
+*  In un area 3x3 della tabella se presente una nave con armatura alterata la ripristina
+*  - eccezione fatta per la stessa nave che invoca il metodo
+*   Ritorna se bool, in base all'esito dell'azione  
+*/
 bool Player::heal(Ship* ship){
     std::string center = ship->getCenter();
     std::string tile;
@@ -132,6 +172,14 @@ bool Player::heal(Ship* ship){
     return true;
 }
 
+/*scan
+*   Permette di vedere la posizione delle navi nella plancia avversaria
+*
+*   In un area 5x5 riporta le posizioni delle navi avversarie
+*   - [Y] per l'avvistamento
+*   - [x] per colpo avvenuto con successo
+*   Ritorna se bool, in base all'esito dell'azione  
+*/
 bool Player::scan(Ship* ship, Player opposite){
     std::string center = ship->getCenter();
     std::string tile;
@@ -166,11 +214,19 @@ bool Player::scan(Ship* ship, Player opposite){
     return true;
 }
 
-Ship Player::addShip(std::string stern, std::string bow, Ship& ship){
+/*addShip
+*   Aggiunge alla legenda del giocatore una nuova nave
+*
+*   Puntato l'oggetto nave, in una mappa di puntatori
+*   Inserito il proprio carattere identificativo nelle posizioni affidate
+*
+*   Ritorna se bool, in base alla disponibilità di inseriremento nelle mappe
+*/
+bool Player::addShip(std::string stern, std::string bow, Ship& ship){
     Ship *shipPointer = &ship;
     int y;
-    if(!validPosition(stern, bow)) return ship;
-    if(obstacles(stern, bow, shipPointer)) return ship;
+    if(!validPosition(stern, bow)) return false;
+    if(obstacles(stern, bow, shipPointer)) return false;
     if(stern.length()==3){
         y = std::stoi(stern.substr(1, 2)); 
     } else {
@@ -198,10 +254,18 @@ Ship Player::addShip(std::string stern, std::string bow, Ship& ship){
             d_grid.setTile(tile, ship.getId());
         }
     }
-    d_grid.addShip();
-    return ship;
+    if(ship.getId() == 'C')d_grid.addShip();
+    return true;
 }
 
+/*removeShip
+*   Distrugge una nave tra legenda e plancia
+*
+*   =>Se una nave ha armatura pari a 0:
+*   - Rimozione delle chiavi dalla lista
+*   - Rimozione dalla griglia di difesa del giocatore
+*   Ritorna bool, se eliminata con successo
+*/
 bool Player::removeShip(Ship* ship){
     std::map<std::string, Ship*>::iterator it = ships.begin();
     while (it != ships.end()){
@@ -215,7 +279,17 @@ bool Player::removeShip(Ship* ship){
     return true;
 }
 
+/*shot
+*   Permette di eseguire un'azione della partita: [richiesta Battleship]
+*
+*   Riporta sulla griglia di attacco del giocatore l'identificazione di una nave nemica
+*   Controlla se nella griglia di difesa avversaria quale elemento è presente nella posizione consegnata
+*
+*   Ritorna bool, in base al successo della chiamata
+*/
 bool Player::shot(Ship* bship, std::string tile, Player &opposite){
+    if(!bship) return false;
+    if(bship->getId() != 'C') return false;
     if(opposite.getDefenceGrid().getTile(tile) != ' '){
         a_grid.setTile(tile, 'x');
         opposite.getDefenceGrid().setTile(tile, std::tolower(opposite.getDefenceGrid().getTile(tile)));
@@ -237,6 +311,14 @@ bool Player::shot(Ship* bship, std::string tile, Player &opposite){
     return true;
 }
 
+/*move_heal
+*   Permette di eseguire un'azione della partita: [richiesta Support]
+*
+*   Richiama le funzioni: move, heal
+*   Unico modo di accesso all'azione unica, ed ai 2 metodi privati
+*
+*   Ritorna bool, in base al successo della chiamata
+*/
 bool Player::move_heal(Ship* sship, std::string tile){
     if(!sship) return false;
     if(sship->getId() != 'S') return false;
@@ -267,6 +349,14 @@ bool Player::move_heal(Ship* sship, std::string tile){
     return true;
 }
 
+/*move_scan
+*   Permette di eseguire un'azione della partita: [richiesta Submarine]
+*
+*   Richiama le funzioni: move, scan
+*   Unico modo di accesso all'azione unica, ed ai 2 metodi privati
+*
+*   Ritorna bool, in base al successo della chiamata
+*/
 bool Player::move_scan(Ship* eship, std::string tile, Player &opposite){
     if(!eship) return false;
     if(eship->getId() != 'E') return false;
@@ -298,7 +388,7 @@ std::map<std::string, Ship*> Player::shipLegend(){
 
 Ship* Player::getShip(std::string tile){
     if(ships.find(tile) != ships.end()) return ships[tile];
-    return nullptr;
+    return 0;
 }
 
 std::string Player::getShipCenter(std::string ship_tile){

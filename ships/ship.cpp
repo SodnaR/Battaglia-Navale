@@ -1,5 +1,7 @@
 #include "../headers/ships.h"
 
+#include <iostream>
+
 Ship::Ship(int dim, std::string stern, std::string bow, char id){
     this->dim = dim;
     this->plate = dim;
@@ -8,25 +10,42 @@ Ship::Ship(int dim, std::string stern, std::string bow, char id){
     this->id = id;
 }
 
-Ship::Ship(int dim, int stern[], int bow[], char id){
-    this->dim = dim;
-    this->plate = dim;
-    this->orient = findOrientation(stern, bow);
-    this->center = locateCenter(stern, bow);
-    this->id = id;
+Ship::Ship(const Ship& refObject){
+    this->dim = refObject.dim;
+    this->plate = refObject.plate;
+    this->orient = refObject.orient;
+    this->center = refObject.center;
+    this->id = refObject.id;
 }
 
-
+/*findOrientation
+*   Permette di identificare l'asse parallelo alla nave
+*
+*   Controllo in base a coordinate alfanumeriche
+*   Ritorna un valore intero per uso booleano in base all'asse designato [x, y]
+*/
 int Ship::findOrientation(std::string stern, std::string bow){
     if(stern[0] == bow[0]) return 1;
     return 0;
 }
 
+/*findOrientation
+*   Permette di identificare l'asse parallelo alla nave
+*
+*   Controllo in base a valori interi
+*   Ritorna un valore intero per uso booleano in base all'asse designato [x, y]
+*/
 int Ship::findOrientation(int stern[], int bow[]){
     if(stern[0] == bow[0]) return 1;
     return 0;
 }
 
+/*locateCenter
+*   Identifica il centro di una nave
+*
+*   Identificazione a partire da valori alfanumerici
+*   Ritorna la coordinata in stringa del centro
+*/
 std::string Ship::locateCenter(std::string stern, std::string bow){
     if(stern.length() > 3 || bow.length() > 3) return "invalid";
 
@@ -54,6 +73,12 @@ std::string Ship::locateCenter(std::string stern, std::string bow){
     return out;
 }
 
+/*locateCenter
+*   Identifica il centro di una nave
+*
+*   Identificazione a partire da valori interi
+*   Ritorna la coordinata in stringa del centro
+*/
 std::string Ship::locateCenter(int stern[], int bow[]){
     std::string start(1, 'a'+stern[0]), end(1, 'a'+bow[0]);
     start += std::to_string((stern[1] + 1));
@@ -61,14 +86,16 @@ std::string Ship::locateCenter(int stern[], int bow[]){
     return locateCenter(start, end);
 }
 
+/*hit
+*   Riduce l'armatura della nave
+*/
 int Ship::hit(){
     return --plate; 
 }
 
-void Ship::sink(){
-    delete this;
-}
-
+/*heal
+*   Ripristina l'armatura alla dimensione della nave
+*/
 int Ship::heal(){
     if(plate != 0)    return plate = dim;
     return plate;
