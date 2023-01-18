@@ -155,17 +155,18 @@ bool Player::move(std::string stern, std::string bow, std::shared_ptr<Ship> ship
 bool Player::heal(std::shared_ptr<Ship> ship){
     std::string center = ship->getCenter();
     std::string tile;
-    int x = center[0] - 'a', y;
+    char x = center[0];
+    int y;
     if(center.length() == 3){
         y = std::stoi(center.substr(1, 2));
     } else{
         y = std::stoi(center.substr(1, 1));
     }
-    if(x >= 22) x -=3;
-    if(x >= 10) x -=2;
-    for (int i = (x > 0) ? (x - 1) : 0; i <= (x + 1); i++){
-        for(int j = (y - 1); j <= (y + 1) && j < d_grid.getMapSize(); j++){
-            tile = (1, ('a' + i));
+    if(x > 'y') x -=3;
+    if(x > 'k') x -=2;
+    for (int i = (x > 'a') ? (x - 1) : 0; i <= (x - 'a' + 1) && i < d_grid.getMapSize(); i++){
+        for(int j = (y > 0) ? (y - 1) : 0; j <= (y + 1) && j <= d_grid.getMapSize(); j++){
+            tile = (1, i);
             tile += std::to_string(j);
             if(ships.find(tile) != ships.end()){
                 if(getShip(tile) != ship){
@@ -188,24 +189,30 @@ bool Player::heal(std::shared_ptr<Ship> ship){
 bool Player::scan(std::shared_ptr<Ship> ship, Player opposite){
     std::string center = ship->getCenter();
     std::string tile;
-    int x = center[0] - 'a', y;
+    char x = center[0];
+    std::cout << "centro: "<<x << std::endl;
+    int y;
     if(center.length() == 3){
         y = std::stoi(center.substr(1, 2));
     } else{
         y = std::stoi(center.substr(1, 1));
     }
-    if(x >= 22) x -=3;
-    if(x >= 10) x -=2;
-    for (int i = (x > 2) ? (x - 2) : 0; i <= (x + 2) && i < d_grid.getMapSize(); i++){
-        for(int j = (y - 2); j <= (y + 2) && j < d_grid.getMapSize(); j++){
-            tile = (1, ('a' + i));
+    if(x > 'y') x -=3;
+    if(x > 'k') x -=2;
+    for(int i = (x > 'b') ? (x - 2) : 0; i <= (x - 'a' + 2) && i< d_grid.getMapSize(); i++){
+        for(int j = (y > 2) ? (y - 2) : 1; j <= (y + 2) && j < d_grid.getMapSize(); j++){
+            if(i >= 'w') tile = (1, (i + 'a' + 5));
+            else if(i >= 'j') tile = (1, (i + 'a' + 2));
+            else tile = (1, (i + 'a'));
             tile += std::to_string(j);
             if(a_grid.getTile(tile) == ' '){
                 if(opposite.getDefenceGrid().getTile(tile) != ' '){
                     a_grid.setTile(tile, 'Y');
                 }
             } else if(a_grid.getTile(tile) == 'x'){
-                if(opposite.getShip(tile)->getArmor() == opposite.getShip(tile)->getDimension()){
+                if(!opposite.getShip(tile)){
+                    a_grid.setTile(tile, ' ');
+                }else if(opposite.getShip(tile)->getArmor() == opposite.getShip(tile)->getDimension()){
                     a_grid.setTile(tile, 'Y');
                 }
             } else{ 
@@ -213,7 +220,6 @@ bool Player::scan(std::shared_ptr<Ship> ship, Player opposite){
                     a_grid.setTile(tile, ' ');
                 }
             }
-            
         }
     }
     return true;

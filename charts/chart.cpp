@@ -74,7 +74,6 @@ bool Chart::valid(std::string tile){
     return true;
 }
 
-#include <iostream>
 /*thereIsChar
 *   Controlla se presente il carattere nella griglia
 *

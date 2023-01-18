@@ -1,7 +1,5 @@
 #include "../headers/player.h"
 
-#include <iostream>
-
 /*nextId
 * + variabile
 *
@@ -368,7 +366,7 @@ bool Player::move_heal(Ship* sship, std::string tile){
 bool Player::move_scan(Ship* eship, std::string tile, Player &opposite){
     if(!eship) return false;
     if(eship->getId() != 'E') return false;
-    
+
     if(!validPosition(tile, tile)) return false;
     if(obstacles(tile, tile, eship)) return false;
     if(!move(tile, tile, eship)) return false;

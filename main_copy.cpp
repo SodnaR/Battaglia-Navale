@@ -6,8 +6,8 @@
 #include <cstdlib>
 #include <ctime>
 
-#include <chrono>
-#include <thread>
+#include<thread>
+#include<chrono>
 
 using namespace std;
 
@@ -74,7 +74,7 @@ int testGame(Player p1, Player p2){
 bool customization = false;
 int bship_custom = 3, sship_custom = 3, eship_custom = 2;
 int map_custom = 12;
-int turn_custom = 200;
+int turn_custom = 100;
 vector<string> p1_coordinate, p2_coordinate;
 vector<Battleship> bships;
 vector<Support> sships;
@@ -124,10 +124,8 @@ Player botVsbot(){
             stern = ship.first;
             bow = ship.second;
             bships.push_back(Battleship(stern, bow));
-            listed = bot1.addShip(stern, bow, bships[(bships.size() - 1)]);
-            this_thread::sleep_for(chrono::nanoseconds(100));  
+            listed = bot1.addShip(stern, bow, bships[(bships.size() - 1)]);  
         }while(!listed);
-        this_thread::sleep_for(chrono::nanoseconds(100));  
         p1_coordinate.push_back(bships[(bships.size() - 1)].getCenter());
     }
     for(int i = sship_custom; i > 0; i--){
@@ -136,10 +134,8 @@ Player botVsbot(){
             stern = ship.first; 
             bow = ship.second;
             sships.push_back(Support(stern, bow));
-            listed = bot1.addShip(stern, bow, sships[(sships.size() - 1)]);
-            this_thread::sleep_for(chrono::nanoseconds(100));  
-        }while(!listed);  
-        this_thread::sleep_for(chrono::nanoseconds(100));  
+            listed = bot1.addShip(stern, bow, sships[(sships.size() - 1)]);  
+        }while(!listed);   
         p1_coordinate.push_back(sships[(sships.size() - 1)].getCenter());
     }
     for(int i = eship_custom; i > 0; i--){
@@ -148,10 +144,8 @@ Player botVsbot(){
             stern = ship.first;
             bow = ship.second;
             eships.push_back(Submarine(stern, bow));
-            listed = bot1.addShip(stern, bow, eships[(eships.size() - 1)]);
-            this_thread::sleep_for(chrono::nanoseconds(100));  
-        }while(!listed);   
-        this_thread::sleep_for(chrono::nanoseconds(100));  
+            listed = bot1.addShip(stern, bow, eships[(eships.size() - 1)]);  
+        }while(!listed);    
         p1_coordinate.push_back(eships[(eships.size() - 1)].getCenter()); 
     }
     
@@ -163,8 +157,7 @@ Player botVsbot(){
             bow = ship.second;
             bships.push_back(Battleship(stern, bow));
             listed = bot2.addShip(stern, bow, bships[(bships.size() - 1)]);
-        }while(!listed);   
-        this_thread::sleep_for(chrono::nanoseconds(100));  
+        }while(!listed);    
     }
     for(int i = sship_custom; i > 0; i--){
         do{
@@ -173,8 +166,7 @@ Player botVsbot(){
             bow = ship.second;
             sships.push_back(Support(stern, bow));
             listed = bot2.addShip(stern, bow, sships[(sships.size() - 1)]);
-        }while(!listed);    
-        this_thread::sleep_for(chrono::nanoseconds(100));  
+        }while(!listed);     
     }
     for(int i = eship_custom; i > 0; i--){
         do{
@@ -182,58 +174,37 @@ Player botVsbot(){
             stern = ship.first;
             bow = ship.second;
             eships.push_back(Submarine(stern, bow));
-            listed = bot2.addShip(stern, bow, eships[(eships.size() - 1)]);
+            listed = bot2.addShip(stern, bow, eships[(eships.size() - 1)]);  
         }while(!listed);    
-        this_thread::sleep_for(chrono::nanoseconds(100));  
-        p2_coordinate.push_back(eships[(eships.size() - 1)].getCenter()); 
+        p1_coordinate.push_back(eships[(eships.size() - 1)].getCenter()); 
     }
-    for(char i = 'a'; i < ('a' + bot1.getDefenceGrid().getMapSize()); i++){
-        for (int j = 0; j < bot1.getDefenceGrid().getMapSize(); j++){
-            std::string tile(1, i);
-            tile += std::to_string(j);
-            std::cout << "["<<bot2.getDefenceGrid().getTile(tile)<<"] ";
-        }
-        std::cout << std::endl;
-    }
-    std::cout << "////////////////////////////////////////////////////////////////////" << std::endl;
-    for(char i = 'a'; i < 'a' + bot2.getDefenceGrid().getMapSize(); i++){
-        for (int j = 0; j < bot2.getDefenceGrid().getMapSize(); j++){
-            std::string tile(1, i);
-            tile += std::to_string(j);
-            std::cout << "["<<bot1.getDefenceGrid().getTile(tile)<<"] ";
-        }
-        std::cout << std::endl;
-    }
-    std::cout << "////////////////////////////////////////////////////////////////////" << std::endl;
-
+    
     std::cout << endl << bot1 <<"--------------------------------"<< std::endl;
     std::cout << endl << bot2 <<"--------------------------------"<< std::endl;
 
 	int move;
     string command = "a0", target = "a0";
 	srand(time(NULL));
-    bool action, replay;
+    bool action, replay = false;
 	for(int i = 1; i <= turn_custom; i++){
         std::cout<<endl << "TURNO " << i << endl << std::endl;
-		move=rand()%3;
         std::cout<<"Player: "<<bot1.getUsername()<< " turn: "<< std::endl;
+        move = rand()%3;
         do{
+		    move = (replay) ? rand()%3 : move;
             replay = false;
             action = false;
             switch(move){
                 case 0:
                     //if(!bot1.getDefenceGrid().thereIsChar('C')) return bot2;
-                    std::cout << "sparo: ";
                     command = getRandomCoord();
                     target = gen_coordinate(map_custom).first;
                     action = bot1.shot(bot1.getShip(command), target, bot2);
                     break;
                 case 1:
                     if(!bot1.getDefenceGrid().thereIsChar('S')){
-                        std::cout << "Ciao" << std::endl;
                         replay = true;
                     }
-                    std::cout << "heal: ";
                     command = getRandomCoord();
                     target = gen_coordinate(map_custom).first;
                     action = bot1.move_heal(bot1.getShip(command), target);
@@ -241,18 +212,15 @@ Player botVsbot(){
                     break;
                 case 2:
                     if(!bot1.getDefenceGrid().thereIsChar('E')){
-                        std::cout << "Ciao" << std::endl;
                         replay = true;
                     }
-                    std::cout << "scan: ";
                     command = getRandomCoord();
                     target = gen_coordinate(map_custom).first;
-                    std::cout<<"["<<command << ", "<<target<<"]" << std::endl;
                     action = bot1.move_scan(bot1.getShip(command), target, bot2);
                     p1_coordinate.push_back(target);
                     break;
             }
-        }while(!action [[ replay);
+        }while(!action || replay);
         switch(move){
             case 0:
                 std::cout << "sparo: ";
@@ -267,15 +235,15 @@ Player botVsbot(){
                 std::cout << command <<" : "<<target<< std::endl;
                 break;
         }
-        move=rand()%3;
         std::cout<<"Player "<<bot2.getUsername()<< " turn: "<< std::endl;
+        move = rand()%3;
         do{
+		    move= (replay) ? rand()%3 : move;
             replay = false;
             action = false;
             switch(move){
             case 0:
-                    //if(!bot2.getDefenceGrid().thereIsChar('C')) return bot1;
-                    std::cout << "sparo: ";
+                    if(!bot2.getDefenceGrid().thereIsChar('C')) return bot1;
                     command = getRandomCoord();
                     target = gen_coordinate(map_custom).first;
                     command = getRandomCoord();
@@ -284,10 +252,8 @@ Player botVsbot(){
                     break;
                 case 1:
                     if(!bot2.getDefenceGrid().thereIsChar('S')){
-                        std::cout << "Ciao" << std::endl;
                         replay = true;
                     }
-                    std::cout << "heal: ";
                     command = getRandomCoord();
                     target = gen_coordinate(map_custom).first;
                     action = bot2.move_heal(bot2.getShip(command), target);
@@ -295,17 +261,15 @@ Player botVsbot(){
                     break;
                 case 2:
                     if(!bot2.getDefenceGrid().thereIsChar('E')){
-                        std::cout << "Ciao" << std::endl;
                         replay = true;
                     }
-                    std::cout << "scan: ";
                     command = getRandomCoord();
                     target = gen_coordinate(map_custom).first;
                     action = bot2.move_scan(bot2.getShip(command), target, bot1);
                     p2_coordinate.push_back(target);
                 break;
             }
-        }while(!action [[ replay);
+        }while(!action || replay);
         switch(move){
             case 0:
                 std::cout << "sparo: ";
