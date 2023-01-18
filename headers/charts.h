@@ -24,6 +24,7 @@ public:
 
     bool valid(int col, int row);
     bool valid(std::string coordinate);
+    bool thereIsChar(char id);
     std::string show();
     std::string show_coordinate();
     void clear();

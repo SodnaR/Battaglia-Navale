@@ -74,6 +74,22 @@ bool Chart::valid(std::string tile){
     return true;
 }
 
+#include <iostream>
+/*thereIsChar
+*   Controlla se presente il carattere nella griglia
+*
+*   Ritorna [0] se non presente, 
+*           [1] se presente
+*/
+bool Chart::thereIsChar(char id){
+    for (int i = 0; i < mapSize; i++){
+        for(int j = 0; j < mapSize; j++){
+            if(chart[i][j] == id) return true;
+        }
+    }
+    return false;
+}
+
 /*show
 *   Mostra la griglia attuale
 *
