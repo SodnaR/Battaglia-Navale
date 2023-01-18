@@ -74,7 +74,7 @@ int testGame(Player p1, Player p2){
 bool customization = false;
 int bship_custom = 3, sship_custom = 3, eship_custom = 2;
 int map_custom = 12;
-int turn_custom = 100;
+int turn_custom = 1000;
 vector<string> p1_coordinate, p2_coordinate;
 vector<Battleship> bships;
 vector<Support> sships;
@@ -196,7 +196,7 @@ Player botVsbot(){
             action = false;
             switch(move){
                 case 0:
-                    //if(!bot1.getDefenceGrid().thereIsChar('C')) return bot2;
+                    if(!bot1.getDefenceGrid().thereIsChar('C')) return bot2;
                     command = getRandomCoord();
                     target = gen_coordinate(map_custom).first;
                     action = bot1.shot(bot1.getShip(command), target, bot2);

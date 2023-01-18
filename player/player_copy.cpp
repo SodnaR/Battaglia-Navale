@@ -97,20 +97,20 @@ char Player::addToChart(std::string tile, char id){
 *   Ritorna bool, in base all'esito e la possibilità nello spostamento
 */
 bool Player::move(std::string stern, std::string bow, std::shared_ptr<Ship> ship){
-    try{
-        if(ship->getArmor() == 0) return false;
-        std::string center = ship->getCenter();
-        std::map<std::string, std::shared_ptr<Ship>>::iterator it = ships.begin();
-        while (it != ships.end()){
-            if(it->second == ship){
-                        d_grid.setTile(it->first, ' ');
-                        ships.erase(it->first);
-                }
-            it++;
-        }     
-    } catch (const std::bad_alloc&) {
-            return false;
-        }  
+    if(ship->getArmor() == 0) return false;
+    std::string center = ship->getCenter();
+    d_grid.setTile(center, ' ');
+    ships.erase(center);
+    std::map<std::string, std::shared_ptr<Ship>>::iterator it = ships.begin();
+    while (it != ships.end()){
+        if(it->second == ship){
+            std::cout << it->first << std::endl;
+                    d_grid.setTile(it->first, ' ');
+                    ships.erase(it->first);
+            }
+        it++;
+    }
+
     int y;
     if(stern.length()==3){
         y = std::stoi(stern.substr(1, 2)); 
@@ -190,7 +190,6 @@ bool Player::scan(std::shared_ptr<Ship> ship, Player opposite){
     std::string center = ship->getCenter();
     std::string tile;
     char x = center[0];
-    std::cout << "centro: "<<x << std::endl;
     int y;
     if(center.length() == 3){
         y = std::stoi(center.substr(1, 2));
@@ -209,7 +208,7 @@ bool Player::scan(std::shared_ptr<Ship> ship, Player opposite){
                 if(opposite.getDefenceGrid().getTile(tile) != ' '){
                     a_grid.setTile(tile, 'Y');
                 }
-            } else if(a_grid.getTile(tile) == 'x'){
+            } else if(a_grid.getTile(tile) == 'x' || a_grid.getTile(tile) == 'X'){
                 if(!opposite.getShip(tile)){
                     a_grid.setTile(tile, ' ');
                 }else if(opposite.getShip(tile)->getArmor() == opposite.getShip(tile)->getDimension()){
