@@ -1,5 +1,7 @@
 #include "../headers/player.h"
 
+#include <iostream>
+
 /*nextId
 * + variabile
 *
@@ -9,18 +11,19 @@
 int Player::nextId = 0;
 
 Player::Player(std::string name){
-    this->name = name;
+    this->name = "bot" + name;
     this->a_grid = AttackC();
     this->d_grid = DefenceC();
 }
 
 Player::Player(DefenceC d_grid, std::string name){
-    this->name = std::to_string(++nextId);
+    this->name = "bot" + name;
     this->a_grid = AttackC(d_grid.getMapSize());
     this->d_grid = DefenceC(d_grid);
 }
 
 Player::Player(const Player& refObject){
+    this->name = refObject.name;
     this->a_grid = refObject.a_grid;
     this->d_grid = refObject.d_grid;
     this->ships = refObject.ships;
@@ -94,16 +97,20 @@ char Player::addToChart(std::string tile, char id){
 *   Ritorna bool, in base all'esito e la possibilità nello spostamento
 */
 bool Player::move(std::string stern, std::string bow, Ship* ship){
-    if(ship->getArmor() == 0) return false;
-    std::string center = ship->getCenter();
-    std::map<std::string, Ship*>::iterator it = ships.begin();
-    while (it != ships.end()){
-        if(it->second->getCenter() == ship->getCenter()){
-            ships.erase(it->first);
-            d_grid.setTile(it->first, ' ');
-        }
-        it++;
-    }
+    try{
+        if(ship->getArmor() == 0) return false;
+        std::string center = ship->getCenter();
+        std::map<std::string, Ship*>::iterator it = ships.begin();
+        while (it != ships.end()){
+            if(it->second== ship){
+                        d_grid.setTile(it->first, ' ');
+                        ships.erase(it->first);
+                }
+            it++;
+        }     
+    } catch (const std::bad_alloc&) {
+            return false;
+    }  
 
     int y;
     if(stern.length()==3){
@@ -127,6 +134,8 @@ bool Player::move(std::string stern, std::string bow, Ship* ship){
     } else {
         char x1 = stern[0], x2 = bow[0];
         for (char i = x1; i <= x2; i++){
+            if(x1 >= 'j') x1 += 2;
+            if(x1 >= 'w') x1 += 3;
             std::string tile(1, i);
             tile += std::to_string(y);
             ships.insert(std::pair<std::string, Ship*>(tile, ship));
@@ -239,16 +248,18 @@ bool Player::addShip(std::string stern, std::string bow, Ship& ship){
         for (int i = y; i <= y2; i++){
             std::string tile(1, stern[0]);
             tile += std::to_string(i); 
-            ships.insert(std::pair<std::string, Ship*>(tile, shipPointer));
             d_grid.setTile(tile, ship.getId());
+            ships.insert(std::pair<std::string, Ship*>(tile, shipPointer));
         }    
     } else {
         char x1 = stern[0], x2 = bow[0];
         for (char i = x1; i <= x2; i++){
+            if(x1 >= 'j') x1 += 2;
+            if(x1 >= 'w') x1 += 3;
             std::string tile(1, i);
             tile += std::to_string(y);
-            ships.insert(std::pair<std::string, Ship*>(tile, shipPointer));
             d_grid.setTile(tile, ship.getId());
+            ships.insert(std::pair<std::string, Ship*>(tile, shipPointer));
         }
     }
     if(ship.getId() == 'C')d_grid.addShip();
@@ -285,6 +296,8 @@ bool Player::removeShip(Ship* ship){
 *   Ritorna bool, in base al successo della chiamata
 */
 bool Player::shot(Ship* bship, std::string tile, Player &opposite){
+    if(!bship) return false;
+    if(bship->getId() != 'C') return false;
     if(opposite.getDefenceGrid().getTile(tile) != ' '){
         a_grid.setTile(tile, 'x');
         opposite.getDefenceGrid().setTile(tile, std::tolower(opposite.getDefenceGrid().getTile(tile)));
@@ -358,7 +371,6 @@ bool Player::move_scan(Ship* eship, std::string tile, Player &opposite){
 
     if(!validPosition(tile, tile)) return false;
     if(obstacles(tile, tile, eship)) return false;
-    
     if(!move(tile, tile, eship)) return false;
     if(!scan(eship, opposite)) return false;
 
@@ -383,7 +395,7 @@ std::map<std::string, Ship*> Player::shipLegend(){
 
 Ship* Player::getShip(std::string tile){
     if(ships.find(tile) != ships.end()) return ships[tile];
-    return nullptr;
+    return 0;
 }
 
 std::string Player::getShipCenter(std::string ship_tile){
