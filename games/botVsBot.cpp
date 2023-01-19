@@ -11,6 +11,7 @@ Player botVsbot(int mapSize, int b_ships, int s_ship, int e_ship, int turns){
     std::ofstream log("log.txt");
     setCustomGame(mapSize, b_ships, s_ship, e_ship, turns);
     log << map_custom << " " << bship_custom << " " << sship_custom << " " << eship_custom << " " << turn_custom << std::endl;
+    log << "Player1" << std::endl;  
 
     //Creazione dei bot in automatico
     Player bot1(map_custom);
@@ -19,7 +20,6 @@ Player botVsbot(int mapSize, int b_ships, int s_ship, int e_ship, int turns){
     gen_Ships(log, bot2);
     
     //Inizio partita
-    log << 1 << std::endl;  
     std::cout << std::endl << bot1 <<"--------------------------------"<< std::endl;
     std::cout << std::endl << bot2 <<"--------------------------------"<< std::endl;
 	for(int i = 1; i <= turn_custom; i++){

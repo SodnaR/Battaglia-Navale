@@ -23,6 +23,13 @@ void setCustomGame(int mapSize, int b_ships, int s_ship, int e_ship, int turns){
     turn_custom = turns;
 }
 
+/*setCustomGame
+*   Inizializza tutte le variabili globali
+*
+*   Tutte le variabili vengono usate sia per modalità:
+*   + standard
+*   + personalizzata
+*/
 void setCustomGame(std::ifstream& log){
     log>>map_custom>>bship_custom>>sship_custom>>eship_custom>>turn_custom;
 }
