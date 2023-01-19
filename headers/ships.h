@@ -21,7 +21,6 @@ protected:
 
 public:
     Ship(int dim, std::string stern, std::string bow, char id);
-    
     Ship(const Ship& refObject);
 
     ~Ship(){};

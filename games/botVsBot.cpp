@@ -1,48 +1,52 @@
-#include "headers/game.h"
-using namespace std;
+#include "../headers/game.h"
 
-/*
-bool customization = false;
-int bship_custom = 3, sship_custom = 3, eship_custom = 2;
-int map_custom = 9;
-int turn_custom = 1000;
+int bship_custom, sship_custom, eship_custom;
+int map_custom;
+int turn_custom;
 
-vector<Battleship> bships;
-vector<Support> sships;
-vector<Submarine> eships;
+std::vector<Battleship> bships;
+std::vector<Support> sships;
+std::vector<Submarine> eships;
 
-int _pos = 0;
+void setCustomGame(int mapSize, int b_ships, int s_ship, int e_ship, int turns){
+    map_custom = mapSize;
+    bship_custom = b_ships;
+    sship_custom = s_ship;
+    eship_custom = e_ship;
+    turn_custom = turns;
+}
 
-pair<string, string> gen_coordinate(int dim){
+std::pair<std::string, std::string> gen_coordinate(int dim){
     int random_orient = rand()%2;
-    random_device rd;
-    mt19937 gen(rd());
-	uniform_int_distribution<int> rng(0, (map_custom - 1));
+    std::random_device rd;
+    std::mt19937 gen(rd());
+	std::uniform_int_distribution<int> rng(0, (map_custom - 1));
     char random_x1 = 'a' + rng(gen), random_x2;
     if(random_x1 >= 'j') random_x1 += 2;
     if(random_x1 >= 'w') random_x1 += 3;
     int random_y = rng(gen) + 1;
-    string tile1, tile2;
+    std::string tile1, tile2;
     if(random_orient){
         tile1 = (1, random_x1);
-        tile1 += to_string(random_y);
+        tile1 += std::to_string(random_y);
         tile2 = (1, random_x1);
-        tile2 += to_string(random_y+(dim-1));
+        tile2 += std::to_string(random_y+(dim-1));
     } else{
         tile1 = (1, random_x1); 
-        tile1 += to_string(random_y);
+        tile1 += std::to_string(random_y);
         random_x2 = (random_x1+(dim-1) > 'j' && dim > 1) ? (random_x1+(dim-1)+2) : random_x1+(dim-1);
         tile2 = (1, random_x2); 
-        tile2 += to_string(random_y);
+        tile2 += std::to_string(random_y);
     }
-    return make_pair(tile1, tile2);
+    return std::make_pair(tile1, tile2);
 }
 
-Player botVsbot(){
+Player botVsbot(int mapSize, int b_ships, int s_ship, int e_ship, int turns){
+    setCustomGame(mapSize, b_ships, s_ship, e_ship, turns);
     Player bot1(map_custom);
     bool listed;
     std::string stern, bow;
-    pair<string, string> ship;
+    std::pair<std::string, std::string> ship;
     for(int i = bship_custom; i > 0; i--, listed = false){
         do{
             ship = gen_coordinate(5);
@@ -98,14 +102,15 @@ Player botVsbot(){
             listed = bot2.addShip(stern, bow, eships[(eships.size() - 1)]);  
         }while(!listed);    
     }
-    std::cout << endl << bot1 <<"--------------------------------"<< std::endl;
-    std::cout << endl << bot2 <<"--------------------------------"<< std::endl;
+    std::cout << std::endl << bot1 <<"--------------------------------"<< std::endl;
+    std::cout << std::endl << bot2 <<"--------------------------------"<< std::endl;
+
 	int move;
-    string command = "a0", target = "a0";
-	srand(time(NULL));
+    std::string command = "a0", target = "a0";
+	srand(std::time(NULL));
     bool action, replay = false;
 	for(int i = 1; i <= turn_custom; i++){
-        std::cout<<endl << "TURNO " << i << endl << std::endl;
+        std::cout << std::endl << "TURNO " << i << std::endl << std::endl;
         move = rand()%3;
         do{
 		    move = (replay) ? rand()%3 : move;
@@ -141,19 +146,16 @@ Player botVsbot(){
         std::cout<<"Player: "<<bot1.getUsername()<< " turn: "<< std::endl;
         switch(move){
             case 0:
-                std::cout << "sparo: ";
-                std::cout << command <<" : "<<target<< std::endl;
+                std::cout << "sparo: "<< command <<" : "<<target<< std::endl;
                 break;
             case 1:
-                std::cout << "heal: ";
-                std::cout << command <<" : "<<target<< std::endl;
+                std::cout << "heal: "<< command <<" : "<<target<< std::endl;
                 break;
             case 2:
-                std::cout << "scan: ";
-                std::cout << command <<" : "<<target<< std::endl;
+                std::cout << "scan: "<< command <<" : "<<target<< std::endl;
                 break;
         }
-        this_thread::sleep_for(chrono::nanoseconds(100000));
+        std::this_thread::sleep_for(std::chrono::nanoseconds(100000));
         move = rand()%3;
         do{
 		    move= (replay) ? rand()%3 : move;
@@ -189,21 +191,18 @@ Player botVsbot(){
         std::cout<<"Player "<<bot2.getUsername()<< " turn: "<< std::endl;
         switch(move){
             case 0:
-                std::cout << "sparo: ";
-                std::cout << command <<" : "<<target<< std::endl;
+                std::cout << "sparo: "<< command <<" : "<<target<< std::endl;
                 break;
             case 1:
-                std::cout << "heal: ";
-                std::cout << command <<" : "<<target<< std::endl;
+                std::cout << "heal: "<< command <<" : "<<target<< std::endl;
                 break;
             case 2:
-                std::cout << "scan: ";
-                std::cout << command <<" : "<<target<< std::endl;
+                std::cout << "scan: "<< command <<" : "<<target<< std::endl;
                 break;
         }
-        this_thread::sleep_for(chrono::nanoseconds(100));
-        std::cout << endl << bot1 <<"--------------------------------"<< std::endl;
-        std::cout << endl << bot2 <<"--------------------------------"<< std::endl;
+        std::this_thread::sleep_for(std::chrono::nanoseconds(100));
+        std::cout << std::endl << bot1 <<"--------------------------------"<< std::endl;
+        std::cout << std::endl << bot2 <<"--------------------------------"<< std::endl;
         if(bot1.getDefenceGrid().shipsCounter() == 0){
             return bot2;
         }
@@ -212,51 +211,4 @@ Player botVsbot(){
         }
     }
     return Player("PAREGGIO");
-}
-*/
-Player playerVsbot(){
-    Player player, bot1;
-    return bot1;
-}
-
-void playerVsplayer(){
-    
-}
-
-int main(){
-    Player winner;
-    int players;
-    string username;
-
-    std::cout << "Benvenuti: prego inserire il numero di giocatori [Max 2]: ";
-    cin >> players;
-    std::cout <<flush; //flush forces the printing to the screen before it pauses
-/*
-    std::cout << "Regole custom: ";
-    std::cout <<endl<< "Inserire la quantita' di corazzate: ";
-    cin >> bship_custom;
-    std::cout <<endl<< "Inserire la quantita' di suppoorti: ";
-    cin >> sship_custom;
-    std::cout <<endl<< "Inserire la quantita' di sottomarini: ";
-    cin >> eship_costum;*/
-    system("clear");
-
-    switch (players)
-    {
-    case 0:
-        winner = botVsbot(9);
-        break;
-    case 1:
-        //winner = playerVsbot();
-        break;
-    case 2:
-        //winner = playerVsplayer();
-        break;
-    case 9:
-        //testGame();
-        break;
-    }
-
-    std::cout << "The winner is:" <<winner.getUsername()<< std::endl;
-    return 0;
 }

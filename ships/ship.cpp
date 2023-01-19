@@ -1,7 +1,5 @@
 #include "../headers/ships.h"
 
-#include <iostream>
-
 Ship::Ship(int dim, std::string stern, std::string bow, char id){
     this->dim = dim;
     this->plate = dim;
