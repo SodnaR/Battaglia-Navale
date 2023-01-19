@@ -276,50 +276,6 @@ void playerTurn(std::ofstream& log, Player& player, Player& opponent){
     log << origin << " " << target << std::endl;  
 }
 
-void vReplay(std::string file_name){
-    std::ifstream log(file_name);
-    setCustomGame(log);
-    std::string move;
-    Player exPlayer1("Player1");
-    insert_Ships(log, exPlayer1);
-    Player exPlayer2("Player2");
-    insert_Ships(log, exPlayer2);
-/*
-    int coin;
-    log>>coin;
-    while (getline(log, move)){
-        std::stringstream tiles(move);
-        if(coin){
-            replay_turn(tiles, exPlayer1, exPlayer2);
-            coin = 0;
-        } else {
-            replay_turn(tiles, exPlayer2, exPlayer1);
-            coin = 1;
-        }
-    }
-   */ 
-}
-
-void replay_turn(std::stringstream& tiles, Player& player, Player& opponent){
-    std::string command, target;
-    tiles>>command>>target;
-    std::cout<<"Player: "<<player.getUsername()<< " turn: "<< std::endl;
-    switch (player.getDefenceGrid().getTile(command)){
-        case 'C':
-            player.shot(player.getShip(command), target, opponent);
-            std::cout << "sparo: "<< command <<" : "<<target<< std::endl;
-            break;
-        case 'S':
-            player.move_heal(player.getShip(command), target);
-            std::cout << "heal: "<< command <<" : "<<target<< std::endl;
-            break;
-        case 'E':
-            player.move_scan(player.getShip(command), target, opponent);
-            std::cout << "scan: "<< command <<" : "<<target<< std::endl;
-            break;
-    }
-}
-
 
 /*gen_coordinates
 *   Genera 2 tile utili da poter usare per la creazione di navi con data misura

@@ -24,12 +24,11 @@ extern std::vector<Submarine> eships;
 void setCustomGame(int mapSize, int b_ships, int s_ship, int e_ship, int turns);
 void setCustomGame(std::ifstream& log);
 void gen_Ships(std::ofstream& log, Player& player);
-void insert_Ships(std::ofstream& log, Player& player);
-void insert_Ships(std::ifstream& log, Player& player);
+void insert_Ships(Player& p1, Player& p2, string file_name);
 void turn(std::ofstream& log, Player& player, Player& opponent);
 void playerTurn(std::ofstream& log, Player& p1, Player& p2);
-void vReplay(std::string file_name);
-void replay_turn(std::stringstream& tiles, Player& player, Player& opponent);
+void vReplay(Player& p1, Player& p2, string file_name);
+void fReplay(Player& p1, Player& p2, string file_name);
 
 std::pair<std::string, std::string> gen_coordinate(int dim);
 
