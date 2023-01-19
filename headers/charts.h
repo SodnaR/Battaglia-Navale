@@ -84,6 +84,8 @@ public:
 
 };
 
+std::string toTile(int x, int y);
+
 std::ostream &operator<<(std::ostream &os, AttackC &chart);
 
 #endif

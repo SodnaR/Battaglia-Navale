@@ -59,11 +59,11 @@ bool Chart::valid(std::string tile){
     if(tile[0] - end >= 0 || tile[0] < 'a') return false;
     if(tile.length() <= 3){
         if(tile.length() == 3){
-            int test = std::stoi(tile.substr(1, 2)) - 1;
+            int test = std::stoi(tile.substr(1, 2));
             return valid(test, test);
         }
         if(tile.length() == 2){
-            int test = std::stoi(tile.substr(1, 1)) - 1;
+            int test = std::stoi(tile.substr(1, 1));
             return valid(test, test);
         }
     }
@@ -149,7 +149,7 @@ void Chart::clear(){
         std::vector<char> line;
         for (int j = 0; j < mapSize; j++)
         {
-            chart[i][j] = ' ';
+            if(chart[i][j] != 'x' || chart[i][j] != 'X') chart[i][j] = ' ';
         }
     }
 }
@@ -238,6 +238,16 @@ char Chart::setTile(std::string tile, char sub){
         return sub;
     }
 }
+
+std::string toTile(int x, int y){
+    std::string spot;
+    if('a' + x > 'y') x -= 3;
+    if('a' + x > 'k') x -= 2;
+    spot = (1, ('a' + x));
+    spot += std::to_string(y);
+    return spot;
+}
+
 
 std::ostream& operator<<(std::ostream& os, Chart& map){
     char slot = 'A';
