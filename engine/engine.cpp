@@ -197,19 +197,7 @@ void turn(std::ofstream& log, Player& player, Player& opponent){
                 action = player.move_scan(player.getShip(command), target, opponent);
                 break;
         }
-    }while(!action || replay); 
-    std::cout<<"Player: "<<player.getUsername()<< " turn: "<< std::endl;
-    switch(move){
-        case 0:
-            std::cout << "sparo: "<< command <<" : "<<target<< std::endl;
-            break;
-        case 1:
-            std::cout << "heal: "<< command <<" : "<<target<< std::endl;
-            break;
-        case 2:
-            std::cout << "scan: "<< command <<" : "<<target<< std::endl;
-            break;
-    }
+    }while(!action || replay);
     log << command << " " << target << std::endl;  
 }
 
@@ -266,15 +254,15 @@ void playerTurn(std::ofstream& log, Player& player, Player& opponent){
 			}while(!done);
         case 'V':
             std::cout << player << std::endl;
-            playerTurn(log, player, opponent);
             break;
         case 'R':
             player.getDefenceGrid().clear();
-            playerTurn(log, player, opponent);
             break;
 		break;		    		
 	}
     switch(move){
+        default:
+            break;
         case 'C':
             std::cout << "sparo: "<< origin <<" : "<<target<< std::endl;
             break;

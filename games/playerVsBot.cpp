@@ -16,9 +16,8 @@ Player playerVsbot(std::string username, int mapSize, int b_ships, int s_ship, i
     int coin = rand()%2;
     log << coin;
     for (int i = 1, j = coin; i <= (turn_custom*2); i++){
-        if(j==0) j++; 
-        std::cout << std::endl << "TURNO " << j << std::endl << std::endl;
         if(coin){
+            std::cout << std::endl << "TURNO " << j << std::endl << std::endl;
             playerTurn(log, player1, bot1);
             coin = 0;
         } else {
