@@ -108,7 +108,7 @@ void Vreplay(Player& p1, Player& p2, string file_name){
 	for(int i=0; i<(ships_custom+1); i++){
 		log.ignore(1000,'\n');
 	}
-    if(coin=="0"){
+    if(coin=="Player1"){
     	cout<<"Player 1 inizia"<<endl;
     	for(int i = 1; i <= turn_custom; i++){
     		getline(log, coord);
@@ -145,7 +145,7 @@ void Vreplay(Player& p1, Player& p2, string file_name){
 			cout<<"player 2 \n"<<p2<<endl;
     	}
     }else{
-    	cout<<"Player 1 inizia"<<endl;
+    	cout<<"Player 2 inizia"<<endl;
     	for(int i = 1; i <= turn_custom; i++){
 			getline(log, coord);
 			stringstream ss(coord);
@@ -199,7 +199,7 @@ void Freplay(Player& p1, Player& p2, string file_name){
 	for(int i=0; i<(ships_custom+1); i++){
 		log.ignore(1000,'\n');
 	}
-    if(coin=="0"){
+    if(coin=="Player1"){
     	out<<"Player 1 inizia"<<endl;
     	for(int i = 1; i <= turn_custom; i++){
     		getline(log, coord);
@@ -236,7 +236,7 @@ void Freplay(Player& p1, Player& p2, string file_name){
 			out<<"player 2 \n"<<p2<<endl;
     	}
     }else{
-    	out<<"Player 1 inizia"<<endl;
+    	out<<"Player 2 inizia"<<endl;
     	for(int i = 1; i <= turn_custom; i++){
 			getline(log, coord);
 			stringstream ss(coord);
