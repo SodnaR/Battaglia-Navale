@@ -13,7 +13,7 @@ using namespace std;
 #include "headers/player_copy.h"
 bool customization = false;
 int bship_custom = 1, sship_custom = 1, eship_custom = 1;
-int ships_custom=bship_custom+sship_custom+eship_custom;
+int ships_custom=(bship_custom+sship_custom+eship_custom)*2;
 int map_custom = 12;
 int turn_custom=1;
 void insertShips(Player& p1, Player& p2, string file_name){
@@ -73,28 +73,7 @@ void insertShips(Player& p1, Player& p2, string file_name){
     }
     log.close();
 }
-void playerTurn(Player& p1, Player& p2, string file_name){
-	ifstream log;
-	log.open(file_name);
-   	string origin, target, coord;
-   	char move;   
-	getline(log, coord);
-	stringstream ss(coord);
-	ss>>origin>>target;
-	move=p1.getDefenceGrid().getTile(origin);
-	switch(move){
-		case 'C':
-			p1.shot(p1.getShip(origin), target, p2);
-			break;
-		case 'S':
-			p1.move_heal(p1.getShip(origin), target);
-			break;
-		case 'E':
-			p1.move_scan(p1.getShip(origin), target, p2);
-		break;		    		
-	}
-	log.close();
-}
+
 void Vreplay(Player& p1, Player& p2, string file_name){   	
 	string origin, target, coord;
 	string coin;
@@ -114,6 +93,7 @@ void Vreplay(Player& p1, Player& p2, string file_name){
     		getline(log, coord);
 			stringstream ss(coord);
 			ss>>origin>>target;
+			cout<<"origin: "<<origin<<" target: "<<target<<endl;
     		move=p1.getDefenceGrid().getTile(origin);
 			switch(move){
 				case 'C':
@@ -145,7 +125,7 @@ void Vreplay(Player& p1, Player& p2, string file_name){
 			cout<<"player 2 \n"<<p2<<endl;
     	}
     }else{
-    	cout<<"Player 2 inizia"<<endl;
+    	cout<<"Player 1 inizia"<<endl;
     	for(int i = 1; i <= turn_custom; i++){
 			getline(log, coord);
 			stringstream ss(coord);
