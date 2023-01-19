@@ -149,7 +149,7 @@ void Chart::clear(){
         std::vector<char> line;
         for (int j = 0; j < mapSize; j++)
         {
-            chart[i][j] = ' ';
+            if(chart[i][j] != 'x' || chart[i][j] != 'X') chart[i][j] = ' ';
         }
     }
 }

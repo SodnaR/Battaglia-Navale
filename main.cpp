@@ -1,43 +1,38 @@
 #include "headers/game.h"
 using namespace std;
 
-Player playerVsbot(){
-    Player player, bot1;
-    return bot1;
-}
-
-void playerVsplayer(){
-    
-}
-
-int main(){
+int main(int argc, char** argv){
     Player winner;
     int players;
     string username;
 
-    std::cout << "Benvenuti: prego inserire il numero di giocatori [Max 2]: ";
+    cout << "Selezionare modalità di gioco: ";
     cin >> players;
-    std::cout <<flush; //flush forces the printing to the screen before it pauses
-/*
-    std::cout << "Regole custom: ";
-    std::cout <<endl<< "Inserire la quantita' di corazzate: ";
-    cin >> bship_custom;
-    std::cout <<endl<< "Inserire la quantita' di suppoorti: ";
-    cin >> sship_custom;
-    std::cout <<endl<< "Inserire la quantita' di sottomarini: ";
-    cin >> eship_costum;*/
+    cout <<flush;
     system("clear");
 
     switch (players)
     {
     case 0:
-        winner = botVsbot(9);
+        winner = botVsbot();
         break;
     case 1:
-        //winner = playerVsbot();
+        cout << "Inserire il proprio username: ";
+        cin >> username;
+        cout <<flush;
+        system("clear");
+        winner = playerVsbot(username);
         break;
     case 2:
         //winner = playerVsplayer();
+        break;
+    case 3:
+        if(argc > 1){
+            std::string filename = argv[1];
+            cout<<flush;
+            system("clear");
+            vReplay(filename);
+        }
         break;
     case 9:
         //testGame();
