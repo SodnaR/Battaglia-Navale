@@ -7,11 +7,7 @@
 #ifndef PLAYER_H 
 #define PLAYER_H
 
-#include <string>
-#include <vector>
 #include <map>
-#include <cctype>
-
 #include <memory>
 
 #include "charts.h"

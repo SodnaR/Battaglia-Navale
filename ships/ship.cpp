@@ -3,7 +3,7 @@
 *
 *Autore:    Sartori Mattia
 */
-#include "../headers/ships.h"
+#include "ships.h"
 
 Ship::Ship(int dim, std::string stern, std::string bow, char id){
     this->dim = dim;

@@ -15,7 +15,7 @@
 *   + In caso di parità una situazione neutra di pareggio
 */
 Player botVsbot(int mapSize, int b_ships, int s_ship, int e_ship, int turns){
-    std::ofstream log("log.txt");
+    std::ofstream log("log_bot.txt");
     setCustomGame(mapSize, b_ships, s_ship, e_ship, turns);
     log << map_custom << " " << bship_custom << " " << sship_custom << " " << eship_custom << " " << turn_custom << std::endl;
     log << "Player1" << std::endl;  

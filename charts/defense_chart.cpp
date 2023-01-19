@@ -3,7 +3,7 @@
 *
 *Autore:    Zambon Francesco
 */
-#include "../headers/charts.h"
+#include "charts.h"
 
 int DefenceC::addShip(){
     return ++bships;

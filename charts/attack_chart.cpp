@@ -3,7 +3,7 @@
 *
 *Autore:    Zambon Francesco
 */
-#include "../headers/charts.h"
+#include "charts.h"
 
 std::ostream &operator<<(std::ostream &os, AttackC &chart){
     char slot = 'A';

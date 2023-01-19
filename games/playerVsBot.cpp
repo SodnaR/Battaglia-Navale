@@ -11,7 +11,7 @@
 *   Continua a scrivere in un file di log l'andamento della partita
 */
 Player playerVsbot(std::string username, int mapSize, int b_ships, int s_ship, int e_ship, int turns){
-    std::ofstream log("log.txt");
+    std::ofstream log("log_player.txt");
     setCustomGame(mapSize, b_ships, s_ship, e_ship, turns);
     log << map_custom << " " << bship_custom << " " << sship_custom << " " << eship_custom << " " << turn_custom << std::endl;
 

@@ -3,7 +3,7 @@
 *
 *Autore:    Zambon Francesco
 */
-#include "../headers/charts.h"
+#include "charts.h"
 
 Chart::Chart(int mapSize){
     this->mapSize = mapSize;
