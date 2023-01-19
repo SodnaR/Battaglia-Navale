@@ -5,7 +5,7 @@
  - Zambon Francesco
  - Zanella Samuele
 
-##DIFFICOLTA:
+## DIFFICOLTA:
 
 Abbiamo riscontrato qualche difficoltà nella realizzazione del  progetto, però non ci sono state troppe peripezie nello sviluppo del codice.
 
