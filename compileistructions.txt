@@ -1,0 +1,1 @@
+g++ -o test main.cpp charts/chart.cpp charts/attack_chart.cpp charts/defense_chart.cpp ships/ship.cpp ships/battleship.cpp ships/support.cpp ships/submarine.cpp player/player.cpp engine/engine.cpp games/playerVsBot.cpp games/botVsBot.cpp
