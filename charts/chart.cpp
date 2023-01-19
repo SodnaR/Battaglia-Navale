@@ -59,11 +59,11 @@ bool Chart::valid(std::string tile){
     if(tile[0] - end >= 0 || tile[0] < 'a') return false;
     if(tile.length() <= 3){
         if(tile.length() == 3){
-            int test = std::stoi(tile.substr(1, 2)) - 1;
+            int test = std::stoi(tile.substr(1, 2));
             return valid(test, test);
         }
         if(tile.length() == 2){
-            int test = std::stoi(tile.substr(1, 1)) - 1;
+            int test = std::stoi(tile.substr(1, 1));
             return valid(test, test);
         }
     }
@@ -72,6 +72,21 @@ bool Chart::valid(std::string tile){
     }
 
     return true;
+}
+
+/*thereIsChar
+*   Controlla se presente il carattere nella griglia
+*
+*   Ritorna [0] se non presente, 
+*           [1] se presente
+*/
+bool Chart::thereIsChar(char id){
+    for (int i = 0; i < mapSize; i++){
+        for(int j = 0; j < mapSize; j++){
+            if(chart[i][j] == id) return true;
+        }
+    }
+    return false;
 }
 
 /*show
