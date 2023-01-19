@@ -8,6 +8,13 @@ std::vector<Battleship> bships;
 std::vector<Support> sships;
 std::vector<Submarine> eships;
 
+/*setCustomGame
+*   Inizializza tutte le variabili globali
+*
+*   Tutte le variabili vengono usate sia per modalità:
+*   + standard
+*   + personalizzata
+*/
 void setCustomGame(int mapSize, int b_ships, int s_ship, int e_ship, int turns){
     map_custom = mapSize;
     bship_custom = b_ships;
@@ -16,6 +23,11 @@ void setCustomGame(int mapSize, int b_ships, int s_ship, int e_ship, int turns){
     turn_custom = turns;
 }
 
+/*gen_coordinates
+*   Genera 2 tile utili da poter usare per la creazione di navi con data misura
+*
+*   Ritorna un paio di stringhe contenenti tile generati casualmente
+*/
 std::pair<std::string, std::string> gen_coordinate(int dim){
     int random_orient = rand()%2;
     std::random_device rd;
@@ -41,8 +53,18 @@ std::pair<std::string, std::string> gen_coordinate(int dim){
     return std::make_pair(tile1, tile2);
 }
 
+/*botVsbot
+*   Funzione principale dove si scontrano due giocatori comandati dalla IA
+*   Inizializza una partita standard o custom a piacimento del giocatore
+*   
+*   Ritorna il giocatore vincitore
+*   + In caso di parità una situazione neutra di pareggio
+*/
 Player botVsbot(int mapSize, int b_ships, int s_ship, int e_ship, int turns){
     setCustomGame(mapSize, b_ships, s_ship, e_ship, turns);
+    std::ofstream log("log.txt");
+
+    //Creazione dei bot in automatico
     Player bot1(map_custom);
     bool listed;
     std::string stern, bow;
@@ -102,15 +124,17 @@ Player botVsbot(int mapSize, int b_ships, int s_ship, int e_ship, int turns){
             listed = bot2.addShip(stern, bow, eships[(eships.size() - 1)]);  
         }while(!listed);    
     }
-    std::cout << std::endl << bot1 <<"--------------------------------"<< std::endl;
-    std::cout << std::endl << bot2 <<"--------------------------------"<< std::endl;
 
 	int move;
     std::string command = "a0", target = "a0";
 	srand(std::time(NULL));
     bool action, replay = false;
+    //Inizio partita
+    std::cout << std::endl << bot1 <<"--------------------------------"<< std::endl;
+    std::cout << std::endl << bot2 <<"--------------------------------"<< std::endl;
 	for(int i = 1; i <= turn_custom; i++){
         std::cout << std::endl << "TURNO " << i << std::endl << std::endl;
+        //turno giocatore 1
         move = rand()%3;
         do{
 		    move = (replay) ? rand()%3 : move;
@@ -156,6 +180,7 @@ Player botVsbot(int mapSize, int b_ships, int s_ship, int e_ship, int turns){
                 break;
         }
         std::this_thread::sleep_for(std::chrono::nanoseconds(100000));
+        //turno giocatore 2
         move = rand()%3;
         do{
 		    move= (replay) ? rand()%3 : move;
@@ -203,6 +228,7 @@ Player botVsbot(int mapSize, int b_ships, int s_ship, int e_ship, int turns){
         std::this_thread::sleep_for(std::chrono::nanoseconds(100));
         std::cout << std::endl << bot1 <<"--------------------------------"<< std::endl;
         std::cout << std::endl << bot2 <<"--------------------------------"<< std::endl;
+        //fine turno di gioco
         if(bot1.getDefenceGrid().shipsCounter() == 0){
             return bot2;
         }
@@ -210,5 +236,6 @@ Player botVsbot(int mapSize, int b_ships, int s_ship, int e_ship, int turns){
             return bot1;
         }
     }
+    log.close();
     return Player("PAREGGIO");
 }
