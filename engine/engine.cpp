@@ -1,4 +1,9 @@
-#include "../headers/engine.h"
+/*Ideatori: Mattia Sartori
+*           Zanella Samuele
+*
+*Autore:    Zanella Samuele
+*/
+#include "engine.h"
 
 int bship_custom, sship_custom, eship_custom;
 int map_custom;
@@ -21,6 +26,16 @@ void setCustomGame(int mapSize, int b_ships, int s_ship, int e_ship, int turns){
     sship_custom = s_ship;
     eship_custom = e_ship;
     turn_custom = turns;
+}
+
+void setCustomGame(std::string filename){
+    std::ifstream log;
+    std::string custom;
+    log.open(filename);
+    getline(log, custom);
+    std::stringstream input(custom);
+    input>>map_custom>>bship_custom>>sship_custom>>eship_custom>>turn_custom;
+    log.close();
 }
 
 /*setCustomGame
@@ -132,39 +147,71 @@ void insert_Ships(std::ofstream& log, Player& player){
 }
 
 /*insert_Ships
-*   Rileva e scansiione le navi presenti in un file
+*   Rileva e scansiona le navi presenti in un file
 *
 *   Tutti i tipi di nave presenti vengono scansionate in base alla quantità inzializzata
 */
-void insert_Ships(std::ifstream& log, Player& player){
-    std::string stern, bow, coords;
-    std::cout << player << std::endl;
-    for(int i = bship_custom; i > 0; i--){
-        std::getline(log, coords);
-        std::stringstream tiles(coords);
-        tiles>>stern>>bow;
-        bships.push_back(Battleship(stern, bow));
-        player.addShip(stern, bow, eships[(eships.size() - 1)]);  
-        std::cout << player << std::endl;
+void insert_Ships(Player& p1, Player& p2, std::string file_name){
+	std::ifstream log;
+	log.open(file_name);
+	log.ignore(1000, '\n');
+	log.ignore(1000, '\n');
+	std::string bow, stern, coord;
+    std::pair<std::string, std::string> ship =std::make_pair("a0","a5");
+    Battleship bship(ship.first, ship.second);
+    for(int i = 0; i<bship_custom; i++){
+		getline(log, coord);
+		std::stringstream ss(coord);
+		ss>>bow>>stern;
+		bship=Battleship(bow, stern);
+		p1.addShip(bow, stern, bship);
     }
-    for(int i = bship_custom; i > 0; i--){
-        std::getline(log, coords);
-        std::stringstream tiles(coords);
-        tiles>>stern>>bow;
-        sships.push_back(Support(stern, bow));
-        player.addShip(stern, bow, sships[(sships.size() - 1)]);  
+    ship=std::make_pair("a0","a3");
+    Support sship(ship.first, ship.second);
+    for(int i = 0; i < sship_custom; i++){
+		getline(log, coord);
+		std::stringstream ss(coord);
+		ss>>bow>>stern;
+     	sship=Support (bow, stern);
+     	p1.addShip(bow, stern, sship);
     }
-    for(int i = bship_custom; i > 0; i--){
-        std::getline(log, coords);
-        std::stringstream tiles(coords);
-        tiles>>stern>>bow;
-        eships.push_back(Submarine(stern, bow));
-        player.addShip(stern, bow, eships[(eships.size() - 1)]);  
+   	ship=std::make_pair("a0","a0");
+   	Submarine eship(ship.first, ship.second);
+    for(int i = 0; i< eship_custom; i++){
+		getline(log, coord);
+		std::stringstream ss(coord);
+		ss>>bow;
+        stern=bow;
+        eship=Submarine (bow, stern); 
+        p1.addShip(bow, stern, eship);   
     }
+    for(int i = 0; i<bship_custom; i++){
+		getline(log, coord);
+		std::stringstream ss(coord);
+		ss>>bow>>stern;
+		bship=Battleship(bow, stern);
+		p2.addShip(bow, stern, bship);
+    }
+    for(int i = 0; i < sship_custom; i++){
+		getline(log, coord);
+		std::stringstream ss(coord);
+		ss>>bow>>stern;
+     	sship=Support (bow, stern);
+     	p2.addShip(bow, stern, sship);
+    }
+    for(int i = 0; i< eship_custom; i++){
+		getline(log, coord);
+		std::stringstream ss(coord);
+		ss>>bow;
+        stern=bow;
+        eship=Submarine (bow, stern); 
+        p2.addShip(bow, stern, eship);   
+    }
+    log.close();
 }
 
 /*turn
-*   Permette di giocare un turno della partita
+*   Permette di giocare un turno della partita in modo casuale
 *
 *   Modidica le plance dei giocatori di conseguenza
 *   Riporta nel log le azioni
@@ -208,6 +255,12 @@ void turn(std::ofstream& log, Player& player, Player& opponent){
     log << command << " " << target << std::endl;  
 }
 
+/*turn
+*   Permette di giocare un turno della partita in base all'azione del giocatore
+*
+*   Modidica le plance dei giocatori di conseguenza
+*   Riporta nel log le azioni
+*/
 void playerTurn(std::ofstream& log, Player& player, Player& opponent){
    	std::string origin, target;
    	char move = 0;
@@ -282,7 +335,6 @@ void playerTurn(std::ofstream& log, Player& player, Player& opponent){
     }
     log << origin << " " << target << std::endl;  
 }
-
 
 /*gen_coordinates
 *   Genera 2 tile utili da poter usare per la creazione di navi con data misura

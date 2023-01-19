@@ -1,3 +1,8 @@
+/*Ideatori: Sartori Mattia
+*           Zanella Samuele
+*
+*Autore:    Sartori Mattia
+*/
 #ifndef SHIPS_H
 #define SHIPS_H
 

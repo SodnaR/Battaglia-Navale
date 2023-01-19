@@ -1,3 +1,9 @@
+/*Ideatori: Sartori Mattia
+*           Zambon Francesco
+*           Zanella Samuele
+*
+*Autore:    Zanella Samuele
+*/
 #ifndef PLAYER_H 
 #define PLAYER_H
 
@@ -8,8 +14,8 @@
 
 #include <memory>
 
-#include "./charts.h"
-#include "./ships.h"
+#include "charts.h"
+#include "ships.h"
 
 class Player{
 

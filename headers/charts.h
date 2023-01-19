@@ -1,3 +1,8 @@
+/*Ideatori: Zambon Francesco
+*           Zanella Samuele
+*
+*Autore:    Zambon Francesco
+*/
 #ifndef CHARTS_H
 #define CHARTS_H
 

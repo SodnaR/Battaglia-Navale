@@ -1,4 +1,10 @@
-#include "../headers/player.h"
+/*Ideatori: Sartori Mattia
+*           Zambon Francesco
+*           Zanella Samuele
+*
+*Autore:    Zanella Samuele
+*/
+#include "player.h"
 
 /*nextId
 * + variabile

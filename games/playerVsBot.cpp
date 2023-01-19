@@ -1,5 +1,15 @@
-#include "../headers/game.h"
+/*Ideatori: Sartori Mattia
+*           Zanella Samuele
+*
+*Autore:    Sartori Mattia
+*/
+#include "game.h"
 
+/*playerVsbot
+*   Partita giocata da un ai ed un giocatore
+*
+*   Continua a scrivere in un file di log l'andamento della partita
+*/
 Player playerVsbot(std::string username, int mapSize, int b_ships, int s_ship, int e_ship, int turns){
     std::ofstream log("log.txt");
     setCustomGame(mapSize, b_ships, s_ship, e_ship, turns);

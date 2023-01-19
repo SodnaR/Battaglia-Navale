@@ -1,3 +1,8 @@
+/*Ideatori: Sartori Mattia
+*           Zanella Samuele
+*
+*Autore:    Zanella Samuele
+*/
 #ifndef ENGINE_H
 #define ENGINE_H
 
@@ -11,7 +16,7 @@
 #include<thread>
 #include<chrono>
 
-#include "./player.h"
+#include "player.h"
 
 extern int bship_custom, sship_custom, eship_custom;
 extern int map_custom;
@@ -22,14 +27,13 @@ extern std::vector<Support> sships;
 extern std::vector<Submarine> eships;
 
 void setCustomGame(int mapSize, int b_ships, int s_ship, int e_ship, int turns);
+void setCustomGame(std::string filename);
 void setCustomGame(std::ifstream& log);
 void gen_Ships(std::ofstream& log, Player& player);
 void insert_Ships(std::ofstream& log, Player& player);
 void insert_Ships(Player& p1, Player& p2, std::string file_name);
 void turn(std::ofstream& log, Player& player, Player& opponent);
 void playerTurn(std::ofstream& log, Player& p1, Player& p2);
-void vReplay(std::string file_name);
-void fReplay(Player& p1, Player& p2, std::string file_name);
 
 std::pair<std::string, std::string> gen_coordinate(int dim);
 

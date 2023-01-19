@@ -1,65 +1,23 @@
-#include "../headers/engine.h"
+/*Ideatori: Sartori Mattia
+*           Zanella Samuele
+*
+*Autore:    Sartori Mattia
+*/
+#include "game.h"
 
+/*ship_custom
+* + variabile
+*
+*   Una somma di tutte le navi del giocatore
+*   Aggiornato in base alla quantità di navi desiderate
+*/
 int ships_custom = (bship_custom + sship_custom + eship_custom)*2;
 
-void insert_Ships(Player& p1, Player& p2, std::string file_name){
-	std::ifstream log;
-	log.open(file_name);
-	log.ignore(1000, '\n');
-	std::string bow, stern, coord;
-    std::pair<std::string, std::string> ship =std::make_pair("a0","a5");
-    Battleship bship(ship.first, ship.second);
-    for(int i = 0; i<bship_custom; i++){
-		getline(log, coord);
-		std::stringstream ss(coord);
-		ss>>bow>>stern;
-		bship=Battleship(bow, stern);
-		p1.addShip(bow, stern, bship);
-    }
-    ship=std::make_pair("a0","a3");
-    Support sship(ship.first, ship.second);
-    for(int i = 0; i < sship_custom; i++){
-		getline(log, coord);
-		std::stringstream ss(coord);
-		ss>>bow>>stern;
-     	sship=Support (bow, stern);
-     	p1.addShip(bow, stern, sship);
-    }
-   	ship=std::make_pair("a0","a0");
-   	Submarine eship(ship.first, ship.second);
-    for(int i = 0; i< eship_custom; i++){
-		getline(log, coord);
-		std::stringstream ss(coord);
-		ss>>bow;
-        stern=bow;
-        eship=Submarine (bow, stern); 
-        p1.addShip(bow, stern, eship);   
-    }
-    for(int i = 0; i<bship_custom; i++){
-		getline(log, coord);
-		std::stringstream ss(coord);
-		ss>>bow>>stern;
-		bship=Battleship(bow, stern);
-		p2.addShip(bow, stern, bship);
-    }
-    for(int i = 0; i < sship_custom; i++){
-		getline(log, coord);
-		std::stringstream ss(coord);
-		ss>>bow>>stern;
-     	sship=Support (bow, stern);
-     	p2.addShip(bow, stern, sship);
-    }
-    for(int i = 0; i< eship_custom; i++){
-		getline(log, coord);
-		std::stringstream ss(coord);
-		ss>>bow;
-        stern=bow;
-        eship=Submarine (bow, stern); 
-        p2.addShip(bow, stern, eship);   
-    }
-    log.close();
-}
-
+/*vReplay
+*	Mostra a schermo il replay di una partita
+*
+*	Dato un log iniziale ripercorre la partita
+*/
 void vReplay(std::string file_name){   
     Player p1, p2;	
 	std::string origin, target, coord;
@@ -67,7 +25,7 @@ void vReplay(std::string file_name){
    	char move;
     std::ifstream log;
 	log.open(file_name);
-    setCustomGame(log);
+    setCustomGame(file_name);
     log.close();
     insert_Ships(p1,p2,file_name);
     std::cout<<"griglie di Player 1: \n"<<p1<<std::endl;
@@ -155,16 +113,26 @@ void vReplay(std::string file_name){
     log.close();
 }
 
-void fReplay(Player& p1, Player& p2, std::string file_name){   	
+
+/*fReplay
+*	Riporta il replay di una partita in un file
+*
+*	Dato un log iniziale ripercorre la partita
+*/
+void fReplay(std::string file_name){   	
+    Player p1, p2;
 	std::string origin, target, coord;
 	std::string coin;
    	char move;
-    insert_Ships(p1,p2, file_name);
     std::ofstream out;
+    std::ifstream log;
+	log.open(file_name);
+    setCustomGame(file_name);
+    log.close();
+    insert_Ships(p1,p2, file_name);
     out.open("game_log.txt");
     out<<"griglie di Player 1: \n"<<p1<<std::endl;
     out<<"griglie di Player 2: \n"<<p2<<std::endl;
-    std::ifstream log;
 	log.open(file_name);
 	getline(log,coin);
 	for(int i=0; i<(ships_custom+1); i++){

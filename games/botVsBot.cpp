@@ -1,4 +1,11 @@
-#include "../headers/game.h"
+/*Ideatori: Sartori
+*           Zambon Francesco
+*           Zanella Samuele
+*
+*
+*Autore:    Zanella Samuele
+*/
+#include "game.h"
 
 /*botVsbot
 *   Funzione principale dove si scontrano due giocatori comandati dalla IA

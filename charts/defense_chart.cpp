@@ -1,3 +1,8 @@
+/*Ideatori: Zambon Francesco
+*           Zanella Samuele
+*
+*Autore:    Zambon Francesco
+*/
 #include "../headers/charts.h"
 
 int DefenceC::addShip(){

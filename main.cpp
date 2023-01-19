@@ -1,4 +1,10 @@
-#include "headers/game.h"
+/*Ideatori: Sartori Mattia
+*           Zambon Francesco
+*           Zanella Samuele
+*
+*Autore:    Zanella Samuele
+*/
+#include "game.h"
 using namespace std;
 
 int main(int argc, char** argv){
@@ -24,18 +30,6 @@ int main(int argc, char** argv){
         winner = playerVsbot(username);
         break;
     case 2:
-        //winner = playerVsplayer();
-        break;
-    case 3:
-        if(argc > 1){
-            std::string filename = argv[1];
-            cout<<flush;
-            system("clear");
-            vReplay(filename);
-        }
-        break;
-    case 9:
-        //testGame();
         break;
     }
 
