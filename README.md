@@ -7,7 +7,7 @@
 
 ##DIFFICOLTA:
 
-Abbiamo riscontrato qualche difficolt‡ nella realizzazione del  progetto, perÚ non ci sono state troppe peripezie nello sviluppo del codice.
+Abbiamo riscontrato qualche difficolt√† nella realizzazione del  progetto, per√≤ non ci sono state troppe peripezie nello sviluppo del codice.
 
  - #### Puntatori #
 	- Abbiamo pensato di usare una mappa di puntatori per sviluppare la mappa delle navi.
@@ -18,8 +18,8 @@ Abbiamo riscontrato qualche difficolt‡ nella realizzazione del  progetto, perÚ n
 
 ##PROBLEMATICHE DI VERSIONE
 
-Una cosa inaspettata Ë quella di aver lasciato ad un membro del gruppo il testing delle funzioni, ciÚ a comportato uno sviluppo improvviso nell'ambiente Linux.
-*I due sistemi non hanno gestione di memoria identico*, cosÏ per testare il programma si Ë finiti per progettare una applicazione per Windows:
-	- ###### Comportando un SEGMENTATION FAULT nei sistemi [Ubuntu](https://blog.opstree.com/2019/04/02/resolving-segmentation-fault-core-dumped-in-ubuntu/) #
+Una cosa inaspettata √® quella di aver lasciato ad un membro del gruppo il testing delle funzioni, ci√≤ a comportato uno sviluppo improvviso nell'ambiente Linux.
+*I due sistemi non hanno gestione di memoria identico*, cos√¨ per testare il programma si √® finiti per progettare una applicazione per Windows:
+ - ###### Comportando un SEGMENTATION FAULT nei sistemi [Ubuntu](https://blog.opstree.com/2019/04/02/resolving-segmentation-fault-core-dumped-in-ubuntu/) #
 
-Tutte le nostre versioni saranno disponibili su [GITHUB](https://github.com/SodnaR/final_project) dal giorno successivo della scadenza della consegna sar‡ reso pubblico.
+Tutte le nostre versioni saranno disponibili su [GITHUB](https://github.com/SodnaR/final_project) dal giorno successivo della scadenza della consegna sar√† reso pubblico.
